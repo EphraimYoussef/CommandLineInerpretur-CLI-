@@ -24,4 +24,9 @@ public class ExampleTest {
         assertEquals(4,result);
     }
 
+    @Test
+    void threePlusOneGivesFour(){
+        var example = new Example();
+        assertEquals(4,example.Add(3,1));
+    }
 }

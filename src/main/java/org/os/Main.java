@@ -1,17 +1,44 @@
 package org.os;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
+import java.io.File;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+        // Initialize CLI with the current working directory
+        CommandLineInterpreter cli = new CommandLineInterpreter(new File(System.getProperty("user.dir")));
+
+        System.out.println("Welcome to Basic CLI! Type 'help' to see available commands.");
+
+        while (true) {
+            // Display prompt with current directory
+            System.out.print(cli.getCurrentDirectory().getAbsolutePath() + " > ");
+            String input = reader.readLine().trim();
+
+            // Parse the input command
+            List<String> commandTokens = Arrays.asList(input.split(" "));
+            String command = commandTokens.get(0);
+
+            // Handle commands
+            if (command.equalsIgnoreCase("exit")) {
+                System.out.println("Exiting CLI...");
+                break;
+            } else if (command.equalsIgnoreCase("help")) {
+                cli.displayHelp();
+            } else if (command.equals("cd")) {
+                cli.changeDirectory(commandTokens);
+            } else if (command.equals("pwd")) {
+                cli.printWorkingDirectory();
+            } else {
+                // Execute other system commands
+                cli.executeCommand(commandTokens);
+            }
         }
     }
 }
