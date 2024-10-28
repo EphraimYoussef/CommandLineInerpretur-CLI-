@@ -9,12 +9,15 @@ import java.io.File;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+
+        System.out.println("Welcome to CLI! Type 'help' to see available commands.");
+
+        //input from user
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         // Initialize CLI with the current working directory
         CommandLineInterpreter cli = new CommandLineInterpreter(new File(System.getProperty("user.dir")));
 
-        System.out.println("Welcome to CLI! Type 'help' to see available commands.");
 
         while (true) {
             // Display prompt with current directory
@@ -39,11 +42,13 @@ public class Main {
             else if (command.equals("pwd")) {
                 cli.printWorkingDirectory();
             }
+            else if (command.equals("ls")) {
+                cli.printList();
+            }
             else {
                 // Execute other system commands
                 cli.errorHandler(command);
             }
         }
-        //try git
     }
 }
