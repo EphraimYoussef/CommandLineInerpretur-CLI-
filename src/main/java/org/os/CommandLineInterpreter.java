@@ -73,11 +73,13 @@ public class CommandLineInterpreter {
         if (files != null) {
             for (File file : files) {
                 // this condition to avoid hiddenfiles
-                if(file.getName().charAt(0) == '.')
+                if(file.isHidden())
                     continue;
-                list.append(count).append("-").append(file.getName()).append(", ");
+                if(file.isDirectory())
+                    list.append(count).append("- /").append(file.getName()).append("/, ");
+                else
+                    list.append(count).append("-").append(file.getName()).append(", ");
                 count++;
-
             }
         }
         System.out.println(list.toString());
@@ -91,10 +93,14 @@ public class CommandLineInterpreter {
         int count = 1;
         for (int i = files.length - 1; i >= 0; i--) {
             // this condition to avoid hiddenfiles
-            if(files[i].getName().charAt(0) == '.')
+            if(files[i].isHidden())
                 continue;
-            list.append(count).append("-").append(files[i].getName()).append(", ");
+            if(files[i].isDirectory())
+                list.append(count).append("- /").append(files[i].getName()).append("/, ");
+            else
+                list.append(count).append("-").append(files[i].getName()).append(", ");
             count++;
+
         }
         System.out.println(list.toString());
     }
@@ -107,12 +113,17 @@ public class CommandLineInterpreter {
         int count = 1;
         if (files != null) {
             for (File file : files) {
+                if(file.isDirectory())
+                    list.append(count).append("- /").append(file.getName()).append("/, ");
+                else
                     list.append(count).append("-").append(file.getName()).append(", ");
-                    count++;
+                count++;
             }
         }
         System.out.println(list.toString());
     }
+
+
 
 
 
