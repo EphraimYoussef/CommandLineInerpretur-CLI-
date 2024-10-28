@@ -29,13 +29,17 @@ public class Main {
             if (command.equalsIgnoreCase("exit")) {
                 System.out.println("Exiting CLI...");
                 break;
-            } else if (command.equalsIgnoreCase("help")) {
+            }
+            else if (command.equalsIgnoreCase("help")) {
                 cli.displayHelp();
-            } else if (command.equals("cd")) {
+            }
+            else if (command.equals("cd")) {
                 cli.changeDirectory(commandTokens);
-            } else if (command.equals("pwd")) {
+            }
+            else if (command.equals("pwd")) {
                 cli.printWorkingDirectory();
-            } else {
+            }
+            else {
                 // Execute other system commands
                 cli.errorHandler(command);
             }
