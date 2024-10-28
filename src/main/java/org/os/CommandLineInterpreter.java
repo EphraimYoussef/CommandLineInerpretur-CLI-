@@ -1,12 +1,10 @@
 package org.os;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class CommandLineInterpreter {
 
+    //the directory that you open the CLI from
     private File currentDirectory;
 
     public CommandLineInterpreter(File initialDirectory) {
@@ -23,26 +21,15 @@ public class CommandLineInterpreter {
     }
 
     // Execute a system command using ProcessBuilder
-    public void executeCommand(List<String> commandTokens) {
-        ProcessBuilder processBuilder = new ProcessBuilder(commandTokens);
-        processBuilder.directory(currentDirectory);
-        processBuilder.redirectErrorStream(true);
+    public void errorHandler(String command) {
+        System.out.println("Error executing command: " + command + " not valid");
 
-        try {
-            Process process = processBuilder.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-            process.waitFor();
-        } catch (IOException | InterruptedException e) {
-            System.out.println("Error executing command: " + e.getMessage());
-        }
     }
 
-    // Change directory
+    // Change directory (cd)
     public void changeDirectory(List<String> commandTokens) {
+
+        //cd + nothing
         if (commandTokens.size() <= 1) {
             System.out.println("cd: missing argument");
             return;
@@ -51,12 +38,14 @@ public class CommandLineInterpreter {
         String path = commandTokens.get(1);
         File newDirectory;
 
+        //go back one step
         if (path.equals("..")) {
             newDirectory = currentDirectory.getParentFile(); // Move up a directory
         } else {
             newDirectory = new File(currentDirectory, path); // Navigate to specified directory
         }
 
+        //must be valid directory and not a file
         if (newDirectory != null && newDirectory.exists() && newDirectory.isDirectory()) {
             currentDirectory = newDirectory.getAbsoluteFile();
         } else {

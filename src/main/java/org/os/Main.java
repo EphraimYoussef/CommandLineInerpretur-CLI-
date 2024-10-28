@@ -14,7 +14,7 @@ public class Main {
         // Initialize CLI with the current working directory
         CommandLineInterpreter cli = new CommandLineInterpreter(new File(System.getProperty("user.dir")));
 
-        System.out.println("Welcome to Basic CLI! Type 'help' to see available commands.");
+        System.out.println("Welcome to CLI! Type 'help' to see available commands.");
 
         while (true) {
             // Display prompt with current directory
@@ -37,7 +37,7 @@ public class Main {
                 cli.printWorkingDirectory();
             } else {
                 // Execute other system commands
-                cli.executeCommand(commandTokens);
+                cli.errorHandler(command);
             }
         }
     }
