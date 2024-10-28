@@ -51,8 +51,11 @@ public class Main {
             else if (command.equals("pwd")) {
                 cli.printWorkingDirectory();
             }
-            else if (command.equals("ls -a")) {
+            else if(command.equals("ls")){
                 cli.printListFiles();
+            }
+            else if (command.equals("ls -a")) {
+                cli.printAllListFiles();
             }
             else if(command.equals("ls -r")) {
                 cli.printRevListFiles();

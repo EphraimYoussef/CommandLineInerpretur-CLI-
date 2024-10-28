@@ -64,7 +64,43 @@ public class CommandLineInterpreter {
     }
 
     //  Lists the contents (files & directories) of the current directory sorted alphabetically
+    //except . starters (ls)
     public void printListFiles(){
+        files = currentDirectory.listFiles();
+        System.out.println("File names: ");
+        StringBuilder list= new StringBuilder();
+        int count = 1;
+        if (files != null) {
+            for (File file : files) {
+                // this condition to avoid hiddenfiles
+                if(file.getName().charAt(0) == '.')
+                    continue;
+                list.append(count).append("-").append(file.getName()).append(", ");
+                count++;
+
+            }
+        }
+        System.out.println(list.toString());
+    }
+
+    //List but reversed (ls -r)
+    public void printRevListFiles() {
+        files = currentDirectory.listFiles();
+        System.out.println("File names reversed: ");
+        StringBuilder list= new StringBuilder();
+        int count = 1;
+        for (int i = files.length - 1; i >= 0; i--) {
+            // this condition to avoid hiddenfiles
+            if(files[i].getName().charAt(0) == '.')
+                continue;
+            list.append(count).append("-").append(files[i].getName()).append(", ");
+            count++;
+        }
+        System.out.println(list.toString());
+    }
+
+    //  Lists all contents including . starter (ls -a)
+    public void printAllListFiles(){
         files = currentDirectory.listFiles();
         System.out.println("File names: ");
         StringBuilder list= new StringBuilder();
@@ -78,18 +114,7 @@ public class CommandLineInterpreter {
         System.out.println(list.toString());
     }
 
-    //List but reversed
-    public void printRevListFiles(){
-        files = currentDirectory.listFiles();
-        System.out.println("File names reversed: ");
-        StringBuilder list= new StringBuilder();
-        int count = 1;
-        for (int i = files.length - 1; i >= 0; i--) {
-            list.append(count).append("-").append(files[i].getName()).append(", ");
-            count++;
-        }
-        System.out.println(list.toString());
-    }
+
 
 
     public File getCurrentDirectory() {
