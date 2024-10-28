@@ -12,7 +12,6 @@ public class CommandLineInterpreter {
 
     public CommandLineInterpreter(File initialDirectory) {
         this.currentDirectory = initialDirectory;
-        files = currentDirectory.listFiles();
     }
 
     // Display help message for internal commands and supported system commands
@@ -61,8 +60,10 @@ public class CommandLineInterpreter {
     public void printWorkingDirectory() {
         System.out.println(currentDirectory.getAbsolutePath());
     }
-    //  Lists the contents (files & directories) of the curren directory sorted alphabetically
-    public void printList(){
+
+    //  Lists the contents (files & directories) of the current directory sorted alphabetically
+    public void printListFiles(){
+        files = currentDirectory.listFiles();
         System.out.println("File names: ");
         if (files != null) {
             for (File file : files) {

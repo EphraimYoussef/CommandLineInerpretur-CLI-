@@ -43,7 +43,7 @@ public class Main {
                 cli.printWorkingDirectory();
             }
             else if (command.equals("ls")) {
-                cli.printList();
+                cli.printListFiles();
             }
             else {
                 // Execute other system commands
