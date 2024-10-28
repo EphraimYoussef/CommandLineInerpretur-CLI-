@@ -10,7 +10,7 @@ import java.io.File;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        System.out.println("Welcome to CLI! Type 'help' to see available commands.");
+        System.out.println("CLI \nType 'help' to see commands");
 
         //input from user
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -26,8 +26,16 @@ public class Main {
             String input = reader.readLine().trim();
 
             // Parse the input command
-            List<String> commandTokens = Arrays.asList(input.split(" "));
-            String command = commandTokens.get(0);
+            List<String> commandslist;
+
+            if(input.startsWith("ls ")){
+                commandslist=Arrays.asList(input);
+            }
+            else{
+                commandslist = Arrays.asList(input.split(" "));
+            }
+
+            String command = commandslist.get(0);
 
             // Handle commands
             if (command.equalsIgnoreCase("exit")) {
@@ -38,15 +46,15 @@ public class Main {
                 cli.displayHelp();
             }
             else if (command.equals("cd")) {
-                cli.changeDirectory(commandTokens);
+                cli.changeDirectory(commandslist);
             }
             else if (command.equals("pwd")) {
                 cli.printWorkingDirectory();
             }
-            else if (command.equals("ls")) {
+            else if (command.equals("ls -a")) {
                 cli.printListFiles();
             }
-            else if(command.equals("lsr")) {
+            else if(command.equals("ls -r")) {
                 cli.printRevListFiles();
             }
             else {

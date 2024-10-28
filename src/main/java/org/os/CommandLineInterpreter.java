@@ -31,7 +31,6 @@ public class CommandLineInterpreter {
 
     // Change directory (cd)
     public void changeDirectory(List<String> commandTokens) {
-
         //cd + nothing
         if (commandTokens.size() <= 1) {
             System.out.println("cd: missing argument");
