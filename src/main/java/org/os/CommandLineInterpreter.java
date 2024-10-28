@@ -38,7 +38,10 @@ public class CommandLineInterpreter {
             return;
         }
 
-        String path = commandTokens.get(1);
+        // join tokens from index 1 to the end, preserving spaces
+        String path = String.join(" ", commandTokens.subList(1, commandTokens.size()));
+
+//        String path = commandTokens.get(1);
         File newDirectory;
 
         //go back one step
