@@ -68,11 +68,15 @@ public class CommandLineInterpreter {
     public void printListFiles(){
         files = currentDirectory.listFiles();
         System.out.println("File names: ");
+        StringBuilder list= new StringBuilder();
+        int count = 1;
         if (files != null) {
             for (File file : files) {
-                System.out.println(file.getName());
+                    list.append(count).append("-").append(file.getName()).append(", ");
+                    count++;
             }
         }
+        System.out.println(list.toString());
     }
 
 

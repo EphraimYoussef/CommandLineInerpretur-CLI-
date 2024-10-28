@@ -23,7 +23,7 @@ public class Main {
             // Display prompt with current directory
             System.out.print(cli.getCurrentDirectory().getAbsolutePath() + " > ");
 
-            String input = reader.readLine();
+            String input = reader.readLine().trim();
 
             // Parse the input command
             List<String> commandTokens = Arrays.asList(input.split(" "));
