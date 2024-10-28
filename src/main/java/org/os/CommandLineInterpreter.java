@@ -124,7 +124,7 @@ public class CommandLineInterpreter {
         System.out.println(list.toString());
     }
 
-    //makedir
+    //makedir (mkdir)
     public void mkdir(List<String> commandTokens) {
          for (int i =1 ; i< commandTokens.size(); i++) {
              String input = commandTokens.get(i);
