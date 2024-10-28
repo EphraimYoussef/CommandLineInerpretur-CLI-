@@ -79,6 +79,19 @@ public class CommandLineInterpreter {
         System.out.println(list.toString());
     }
 
+    //List but reversed
+    public void printRevListFiles(){
+        files = currentDirectory.listFiles();
+        System.out.println("File names reversed: ");
+        StringBuilder list= new StringBuilder();
+        int count = 1;
+        for (int i = files.length - 1; i >= 0; i--) {
+            list.append(count).append("-").append(files[i].getName()).append(", ");
+            count++;
+        }
+        System.out.println(list.toString());
+    }
+
 
     public File getCurrentDirectory() {
         return currentDirectory;

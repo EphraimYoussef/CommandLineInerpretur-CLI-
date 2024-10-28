@@ -46,6 +46,9 @@ public class Main {
             else if (command.equals("ls")) {
                 cli.printListFiles();
             }
+            else if(command.equals("lsr")) {
+                cli.printRevListFiles();
+            }
             else {
                 // Execute other system commands
                 cli.errorHandler(command);
