@@ -18,7 +18,6 @@ public class Main {
         // Initialize CLI with the current working directory
         CommandLineInterpreter cli = new CommandLineInterpreter(new File(System.getProperty("user.dir")));
 
-
         while (true) {
             // Display prompt with current directory
             System.out.print(cli.getCurrentDirectory().getAbsolutePath() + " > ");
@@ -27,6 +26,7 @@ public class Main {
 
             // Parse the input command
             List<String> commandslist;
+            //["help" , "cd" ,"cd".."
 
             if(input.startsWith("ls ")){
                 commandslist=Arrays.asList(input);
@@ -60,6 +60,10 @@ public class Main {
             else if(command.equals("ls -r")) {
                 cli.printRevListFiles();
             }
+            else if(command.equals("mkdir")){
+                cli.mkdir(commandslist);
+            }
+
             else {
                 // Execute other system commands
                 cli.errorHandler(command);

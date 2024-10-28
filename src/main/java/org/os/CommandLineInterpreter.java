@@ -1,5 +1,9 @@
 package org.os;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 
 public class CommandLineInterpreter {
@@ -36,11 +40,8 @@ public class CommandLineInterpreter {
             System.out.println("cd: missing argument");
             return;
         }
-
         // join tokens from index 1 to the end, preserving spaces
         String path = String.join(" ", commandTokens.subList(1, commandTokens.size()));
-
-//        String path = commandTokens.get(1);
         File newDirectory;
 
         //go back one step
@@ -65,37 +66,37 @@ public class CommandLineInterpreter {
 
     //  Lists the contents (files & directories) of the current directory sorted alphabetically
     //except . starters (ls)
-    public void printListFiles(){
+    public void printListFiles() {
         files = currentDirectory.listFiles();
         System.out.println("File names: ");
-        StringBuilder list= new StringBuilder();
+        StringBuilder list = new StringBuilder();
         int count = 1;
         if (files != null) {
             for (File file : files) {
                 // this condition to avoid hiddenfiles
-                if(file.isHidden())
+                if (file.isHidden())
                     continue;
-                if(file.isDirectory())
+                if (file.isDirectory())
                     list.append(count).append("- /").append(file.getName()).append("/, ");
                 else
                     list.append(count).append("-").append(file.getName()).append(", ");
                 count++;
             }
         }
-        System.out.println(list.toString());
+        System.out.println(list);
     }
 
     //List but reversed (ls -r)
     public void printRevListFiles() {
         files = currentDirectory.listFiles();
         System.out.println("File names reversed: ");
-        StringBuilder list= new StringBuilder();
+        StringBuilder list = new StringBuilder();
         int count = 1;
         for (int i = files.length - 1; i >= 0; i--) {
             // this condition to avoid hiddenfiles
-            if(files[i].isHidden())
+            if (files[i].isHidden())
                 continue;
-            if(files[i].isDirectory())
+            if (files[i].isDirectory())
                 list.append(count).append("- /").append(files[i].getName()).append("/, ");
             else
                 list.append(count).append("-").append(files[i].getName()).append(", ");
@@ -106,14 +107,14 @@ public class CommandLineInterpreter {
     }
 
     //  Lists all contents including . starter (ls -a)
-    public void printAllListFiles(){
+    public void printAllListFiles() {
         files = currentDirectory.listFiles();
         System.out.println("File names: ");
-        StringBuilder list= new StringBuilder();
+        StringBuilder list = new StringBuilder();
         int count = 1;
         if (files != null) {
             for (File file : files) {
-                if(file.isDirectory())
+                if (file.isDirectory())
                     list.append(count).append("- /").append(file.getName()).append("/, ");
                 else
                     list.append(count).append("-").append(file.getName()).append(", ");
@@ -123,10 +124,26 @@ public class CommandLineInterpreter {
         System.out.println(list.toString());
     }
 
+    //makedir
+    public void mkdir(List<String> commandTokens) {
+         for (int i =1 ; i< commandTokens.size(); i++) {
+             String input = commandTokens.get(i);
+            // Address of Current Directory
+            String currentDirectory = getCurrentDirectory().getAbsolutePath();
 
 
+            //Input name + our current path
+            //seprator to create file inside /dir
+            String directoryPath = currentDirectory + File.separator + input;
 
+            File directory = new File(directoryPath);
 
+            if (directory.mkdirs())
+                System.out.println("Directory Created Succesfully! at : " + directoryPath);
+            else
+                System.out.println("Failed to create Directory ");
+        }
+    }
 
     public File getCurrentDirectory() {
         return currentDirectory;
