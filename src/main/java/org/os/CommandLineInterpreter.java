@@ -129,24 +129,57 @@ public class CommandLineInterpreter {
          for (int i =1 ; i< commandTokens.size(); i++) {
              String input = commandTokens.get(i);
 
-            // Address of Current Directory
-            String currentDirectoryPath = getCurrentDirectory().getAbsolutePath();
+            // Address of current Directory that we will put newdir in
+            String Path = getCurrentDirectory().getAbsolutePath();
 
 
-            //Input name + our current path
-            //seprator to create file inside /dir
+            //created the path of created dir by merging path + \ + name
+            //seprator to make /
+            //makes
+            String DirectoryName_path = Path + File.separator + input;
 
-            String directoryPath = currentDirectoryPath + File.separator + input;
+            File directory = new File(DirectoryName_path);
 
-            File directory = new File(directoryPath);
-
+            //create directory with given path
             if (directory.mkdirs())
-                System.out.println("Directory Created Succesfully! at : " + directoryPath);
+                System.out.println("Directory Created Succesfully! at : " + DirectoryName_path);
             else
                 System.out.println("Failed to create Directory ");
         }
     }
 
+    public void touch(List<String> commandTokens) throws IOException {
+        for (int i =1 ; i< commandTokens.size(); i++) {
+            //input after touch
+            StringBuilder input = new StringBuilder(commandTokens.get(i));
+
+            //Address of current Directory that we will put newfile in
+            String path = currentDirectory.getAbsolutePath();
+
+            //Handling if file inside dir !
+            String finder = "/";
+
+            //to handle if there is directories
+            int index=input.lastIndexOf(finder);
+
+            if(index != -1)
+                input.setCharAt(index,File.separatorChar);
+
+            //creating the path that we will pass to file function
+            String FileName_path = path + File.separator + input;
+
+            File file = new File(FileName_path);
+
+            if(file.createNewFile())
+                System.out.println("File Created Succesfully! at : " + FileName_path);
+            else
+                System.out.println("Failed to create File ");
+
+
+        }
+    }
+
+    //removedir (rmdir)
     public void rmdir(){
         boolean deletionProcess =currentDirectory.delete();
         if(deletionProcess){
@@ -158,6 +191,8 @@ public class CommandLineInterpreter {
             System.out.println("Failed to Delete Directory (The files isn't Empty)");
 
     }
+
+
 
     public File getCurrentDirectory() {
         return currentDirectory;

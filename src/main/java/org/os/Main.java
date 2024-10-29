@@ -66,6 +66,8 @@ public class Main {
             else if(command.equals("rmdir")){
                 cli.rmdir();
             }
+            else if(command.equals("touch"))
+                cli.touch(commandslist);
 
             else {
                 // Execute other system commands
