@@ -128,13 +128,15 @@ public class CommandLineInterpreter {
     public void mkdir(List<String> commandTokens) {
          for (int i =1 ; i< commandTokens.size(); i++) {
              String input = commandTokens.get(i);
+
             // Address of Current Directory
-            String currentDirectory = getCurrentDirectory().getAbsolutePath();
+            String currentDirectoryPath = getCurrentDirectory().getAbsolutePath();
 
 
             //Input name + our current path
             //seprator to create file inside /dir
-            String directoryPath = currentDirectory + File.separator + input;
+
+            String directoryPath = currentDirectoryPath + File.separator + input;
 
             File directory = new File(directoryPath);
 
@@ -143,6 +145,18 @@ public class CommandLineInterpreter {
             else
                 System.out.println("Failed to create Directory ");
         }
+    }
+
+    public void rmdir(){
+        boolean deletionProcess =currentDirectory.delete();
+        if(deletionProcess){
+            System.out.println("Directory Deleted Succesfully!");
+            currentDirectory =currentDirectory.getParentFile();
+        }
+
+        else
+            System.out.println("Failed to Delete Directory (The files isn't Empty)");
+
     }
 
     public File getCurrentDirectory() {

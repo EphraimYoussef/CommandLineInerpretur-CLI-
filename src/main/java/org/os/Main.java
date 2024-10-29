@@ -63,6 +63,9 @@ public class Main {
             else if(command.equals("mkdir")){
                 cli.mkdir(commandslist);
             }
+            else if(command.equals("rmdir")){
+                cli.rmdir();
+            }
 
             else {
                 // Execute other system commands
