@@ -68,7 +68,6 @@ public class CommandLineInterpreter {
     //except . starters (ls)
     public void printListFiles() {
         files = currentDirectory.listFiles();
-        System.out.println("File names: ");
         StringBuilder list = new StringBuilder();
         int count = 1;
         if (files != null) {
@@ -89,7 +88,6 @@ public class CommandLineInterpreter {
     //List but reversed (ls -r)
     public void printRevListFiles() {
         files = currentDirectory.listFiles();
-        System.out.println("File names reversed: ");
         StringBuilder list = new StringBuilder();
         int count = 1;
         for (int i = files.length - 1; i >= 0; i--) {
@@ -109,7 +107,6 @@ public class CommandLineInterpreter {
     //  Lists all contents including . starter (ls -a)
     public void printAllListFiles() {
         files = currentDirectory.listFiles();
-        System.out.println("File names: ");
         StringBuilder list = new StringBuilder();
         int count = 1;
         if (files != null) {
