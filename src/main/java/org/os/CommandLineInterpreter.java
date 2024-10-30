@@ -25,8 +25,7 @@ public class CommandLineInterpreter {
 
     // Execute a system command using ProcessBuilder
     public void errorHandler(String command) {
-        System.out.println("Error executing command: " + command + " not valid");
-
+        System.out.println("Error executing command: " + command + " not valid")
     }
 
     // Change directory (cd)
@@ -72,7 +71,7 @@ public class CommandLineInterpreter {
         int count = 1;
         if (files != null) {
             for (File file : files) {
-                // this condition to avoid hiddenfiles
+                // this condition to avoid hidden files
                 if(file.isHidden())
                     continue;
                 if(file.isDirectory())
@@ -92,7 +91,7 @@ public class CommandLineInterpreter {
         StringBuilder list= new StringBuilder();
         int count = 1;
         for (int i = files.length - 1; i >= 0; i--) {
-            // this condition to avoid hiddenfiles
+            // this condition to avoid hidden files
             if(files[i].isHidden())
                 continue;
             if(files[i].isDirectory())
