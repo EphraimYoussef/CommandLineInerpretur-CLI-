@@ -146,6 +146,7 @@ public class CommandLineInterpreter {
         }
     }
 
+    //create file (touch)
     public void touch(List<String> commandTokens) throws IOException {
         for (int i =1 ; i< commandTokens.size(); i++) {
             //input after touch
@@ -204,6 +205,7 @@ public class CommandLineInterpreter {
 
     }
 
+    //move file or directory (mv)
     public void mv(List<String> commandTokens) {
         if (commandTokens.size() < 3){
             System.out.println("Error, Expected at least 2 arguments.\n");
