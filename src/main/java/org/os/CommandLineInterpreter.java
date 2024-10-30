@@ -104,7 +104,7 @@ public class CommandLineInterpreter {
         StringBuilder list = new StringBuilder();
         int count = 1;
         for (int i = files.length - 1; i >= 0; i--) {
-            // this condition to avoid hiddenfiles
+            // this condition to avoid hiddenFiles
             if (files[i].isHidden())
                 continue;
             if (files[i].isDirectory())
@@ -134,17 +134,17 @@ public class CommandLineInterpreter {
         System.out.println(list.toString());
     }
 
-    //makedir (mkdir)
+    //makeDir (mkdir)
     public void mkdir(List<String> commandTokens) {
         for (int i = 1; i < commandTokens.size(); i++) {
             String input = commandTokens.get(i);
 
-            // Address of current Directory that we will put newdir in
+            // Address of current Directory that we will put newDir in
             String Path = getCurrentDirectory().getAbsolutePath();
 
 
             //created the path of created dir by merging path + \ + name
-            //seprator to make /
+            //separator to make /
             //makes
             String DirectoryName_path = Path + File.separator + input;
 
@@ -152,7 +152,7 @@ public class CommandLineInterpreter {
 
             //create directory with given path
             if (directory.mkdirs())
-                System.out.println("Directory Created Succesfully! at : " + DirectoryName_path);
+                System.out.println("Directory Created Successfully! at : " + DirectoryName_path);
             else
                 System.out.println("Failed to create Directory ");
         }
@@ -164,7 +164,7 @@ public class CommandLineInterpreter {
             //input after touch
             StringBuilder input = new StringBuilder(commandTokens.get(i));
 
-            //Address of current Directory that we will put newfile in
+            //Address of current Directory that we will put newFile in
             String path = currentDirectory.getAbsolutePath();
 
             //Handling if file inside dir !
@@ -190,7 +190,7 @@ public class CommandLineInterpreter {
         }
     }
 
-    //removedir (rmdir)
+    //removeDir (rmdir)
     public void rmdir(List<String> commandTokens) {
 
         if (commandTokens.size() <= 1) {
@@ -201,10 +201,10 @@ public class CommandLineInterpreter {
         String dir = String.join(" ", commandTokens.subList(1, commandTokens.size()));
         File directoryToBeDeleted = new File(currentDirectory, dir);
 
-        if (directoryToBeDeleted != null && directoryToBeDeleted.exists() && directoryToBeDeleted.isDirectory()) {
+        if (directoryToBeDeleted.exists() && directoryToBeDeleted.isDirectory()) {
             boolean deletionProcess = directoryToBeDeleted.delete();
             if (deletionProcess) {
-                System.out.println("Directory Deleted Succesfully!");
+                System.out.println("Directory Deleted Successfully!");
             } else
                 System.out.println("Failed to Delete Directory (The files isn't Empty)");
         } else {
@@ -281,7 +281,6 @@ public class CommandLineInterpreter {
         String path = currentDirectory.getAbsolutePath();
         for (int i = 1; i < commandTokens.size(); ++i) {
             String targetPath = path + File.separator + commandTokens.get(i);
-            ;
             File targetFile = new File(targetPath);
             if (targetFile.isDirectory()) {
                 System.out.println("rm: cannot remove " + commandTokens.get(i) + " : Is a " + "directory");
