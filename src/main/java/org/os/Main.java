@@ -52,7 +52,13 @@ public class Main {
                 cli.printWorkingDirectory();
             }
             else if(command.equals("ls")){
-                cli.printListFiles();
+                cli.printListFiles(commandslist);
+            }
+            else if(command.startsWith("ls >>")){
+                cli.printListFiles(commandslist);
+            }
+            else if(command.startsWith("ls >")){
+                cli.printListFiles(commandslist);
             }
             else if (command.equals("ls -a")) {
                 cli.printAllListFiles();
@@ -78,6 +84,7 @@ public class Main {
             else if(command.equals("cat")){
                 cli.cat(commandslist);
             }
+
             else {
                 // Execute other system commands
                 cli.errorHandler(command);

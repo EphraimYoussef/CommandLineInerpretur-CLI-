@@ -1,8 +1,9 @@
 package org.os;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class CommandLineInterpreter {
@@ -65,7 +66,8 @@ public class CommandLineInterpreter {
 
     //  Lists the contents (files & directories) of the current directory sorted alphabetically
     //except . starters (ls)
-    public void printListFiles() {
+    public void printListFiles(List<String> commandTokens) throws IOException {
+        commandTokens = List.of(commandTokens.get(0).split(" "));
         files = currentDirectory.listFiles();
         StringBuilder list = new StringBuilder();
         int count = 1;
@@ -80,6 +82,18 @@ public class CommandLineInterpreter {
                     list.append(count).append("-").append(file.getName()).append(", ");
                 count++;
             }
+        }
+        if(commandTokens.size() == 3 && Objects.equals(commandTokens.get(1), ">")) {
+            //for >
+            String toSend = list.toString();
+            greaterThan(toSend,commandTokens.get(2));
+            return;
+        }
+        else if(commandTokens.size() == 3 && Objects.equals(commandTokens.get(1), ">>")) {
+            //for >
+            String toSend = list.toString();
+            greaterThanThan(toSend,commandTokens.get(2));
+            return;
         }
         System.out.println(list);
     }
@@ -292,6 +306,11 @@ public class CommandLineInterpreter {
         StringBuilder input = new StringBuilder();
         //path of file before adding name
         input.append(getCurrentDirectory().getAbsolutePath());
+
+        if (commandTokens.get(2) == ">") {
+
+        }
+
         if (commandTokens.size() == 1) {
             //file name input from user
             Scanner reader = new Scanner(System.in);
@@ -319,6 +338,47 @@ public class CommandLineInterpreter {
             System.out.println(line);
         }
         readContent.close();
+    }
+
+    //Redirect output (>)
+    public void greaterThan(String output, String filename) throws IOException {
+        List<String> toSend = new ArrayList<String>();
+        toSend.add(filename);
+
+        //path
+        StringBuilder path = new StringBuilder();
+        path.append(currentDirectory.getAbsolutePath()).append(File.separator).append(filename).append(".txt");
+
+        //File checker
+        File file_checker = new File(path.toString());
+        if (!file_checker.exists()) {
+            touch(toSend);
+        }
+        //path to file
+        FileWriter file = new FileWriter(path.toString());
+        file.write(output);
+        file.close();
+
+    }
+
+    //Redirect output (>>)
+    public void greaterThanThan(String output, String filename) throws IOException {
+        List<String> toSend = new ArrayList<String>();
+        toSend.add(filename);
+
+        //path
+        StringBuilder path = new StringBuilder();
+        path.append(currentDirectory.getAbsolutePath()).append(File.separator).append(filename).append(".txt");
+
+        //File checker
+        File file_checker = new File(path.toString());
+        if (!file_checker.exists()) {
+            touch(toSend);
+        }
+        //path to file
+        FileWriter file = new FileWriter(path.toString(),true);
+        file.write(output);
+        file.close();
 
     }
 
