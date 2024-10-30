@@ -103,7 +103,7 @@ public class CommandLineInterpreter {
         StringBuilder list = new StringBuilder();
         int count = 1;
         for (int i = files.length - 1; i >= 0; i--) {
-            // this condition to avoid hiddenfiles
+            // this condition to avoid hiddenFiles
             if (files[i].isHidden())
                 continue;
             if (files[i].isDirectory())
@@ -133,17 +133,17 @@ public class CommandLineInterpreter {
         System.out.println(list.toString());
     }
 
-    //makedir (mkdir)
+    //makeDir (mkdir)
     public void mkdir(List<String> commandTokens) {
         for (int i = 1; i < commandTokens.size(); i++) {
             String input = commandTokens.get(i);
 
-            // Address of current Directory that we will put newdir in
+            // Address of current Directory that we will put newDir in
             String Path = getCurrentDirectory().getAbsolutePath();
 
 
             //created the path of created dir by merging path + \ + name
-            //seprator to make /
+            //separator to make /
             //makes
             String DirectoryName_path = Path + File.separator + input;
 
@@ -210,7 +210,16 @@ public class CommandLineInterpreter {
             } else {
                 System.out.println("cd: No such directory: " + dir);
             }
+        if (directoryToBeDeleted.exists() && directoryToBeDeleted.isDirectory()) {
+            boolean deletionProcess = directoryToBeDeleted.delete();
+            if (deletionProcess) {
+                System.out.println("Directory Deleted Successfully!");
+            } else
+                System.out.println("Failed to Delete Directory (The files isn't Empty)");
+        } else {
+            System.out.println("cd: No such directory: " + dir);
         }
+
 
     }
 
