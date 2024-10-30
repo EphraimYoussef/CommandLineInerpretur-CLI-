@@ -269,7 +269,7 @@ public class CommandLineInterpreter {
         }
     }
 
-    //cat concatenate
+    //cat concatenate (cat)
     public void cat(List<String> commandTokens) throws IOException {
         //filename
         StringBuilder input= new StringBuilder();
