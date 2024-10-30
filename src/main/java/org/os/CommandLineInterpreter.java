@@ -122,12 +122,11 @@ public class CommandLineInterpreter {
 
     //makedir (mkdir)
     public void mkdir(List<String> commandTokens) {
-         for (int i =1 ; i< commandTokens.size(); i++) {
-             String input = commandTokens.get(i);
+        for (int i = 1; i < commandTokens.size(); i++) {
+            String input = commandTokens.get(i);
 
             // Address of current Directory that we will put newdir in
             String Path = getCurrentDirectory().getAbsolutePath();
-
 
 
             //created the path of created dir by merging path + \ + name
@@ -147,7 +146,7 @@ public class CommandLineInterpreter {
 
     //create file (touch)
     public void touch(List<String> commandTokens) throws IOException {
-        for (int i =1 ; i< commandTokens.size(); i++) {
+        for (int i = 1; i < commandTokens.size(); i++) {
             //input after touch
             StringBuilder input = new StringBuilder(commandTokens.get(i));
 
@@ -158,17 +157,17 @@ public class CommandLineInterpreter {
             String finder = "/";
 
             //to handle if there is directories
-            int index=input.lastIndexOf(finder);
+            int index = input.lastIndexOf(finder);
 
-            if(index != -1)
-                input.setCharAt(index,File.separatorChar);
+            if (index != -1)
+                input.setCharAt(index, File.separatorChar);
 
             //creating the path that we will pass to file function
             String FileName_path = path + File.separator + input;
 
             File file = new File(FileName_path);
 
-            if(file.createNewFile())
+            if (file.createNewFile())
                 System.out.println("File Created Successfully! at : " + FileName_path);
             else
                 System.out.println("Failed to create File ");
@@ -178,7 +177,7 @@ public class CommandLineInterpreter {
     }
 
     //removedir (rmdir)
-    public void rmdir(List<String> commandTokens){
+    public void rmdir(List<String> commandTokens) {
 
         if (commandTokens.size() <= 1) {
             System.out.println("rmdir: missing argument");
@@ -186,27 +185,24 @@ public class CommandLineInterpreter {
         }
 
         String dir = String.join(" ", commandTokens.subList(1, commandTokens.size()));
-        File directoryToBeDeleted = new File(currentDirectory,dir);
+        File directoryToBeDeleted = new File(currentDirectory, dir);
 
         if (directoryToBeDeleted != null && directoryToBeDeleted.exists() && directoryToBeDeleted.isDirectory()) {
             boolean deletionProcess = directoryToBeDeleted.delete();
-            if(deletionProcess){
+            if (deletionProcess) {
                 System.out.println("Directory Deleted Succesfully!");
-            }
-
-            else
+            } else
                 System.out.println("Failed to Delete Directory (The files isn't Empty)");
         } else {
             System.out.println("cd: No such directory: " + dir);
         }
 
 
-
     }
 
     //move file or directory (mv)
     public void mv(List<String> commandTokens) {
-        if (commandTokens.size() < 3){
+        if (commandTokens.size() < 3) {
             System.out.println("Error, Expected at least 2 arguments.\n");
             return;
         }
@@ -225,34 +221,30 @@ public class CommandLineInterpreter {
                     File newFileLocation = new File(destinationFile, sourceFile.getName());
                     if (sourceFile.renameTo(newFileLocation)) {
                         System.out.println("File moved to " + newFileLocation.getPath());
-                    }
-                    else {
+                    } else {
                         System.out.println("Failed to move file.");
                     }
-                }
-                else { // rename
+                } else { // rename
                     if (sourceFile.renameTo(destinationFile)) {
                         System.out.println("File renamed to " + destinationFile.getPath());
-                    }
-                    else {
+                    } else {
                         System.out.println("Failed to rename file.");
                     }
                 }
-            }
-            else { // Error.
+            } else { // Error.
                 System.out.println("Source file does not exist.");
             }
-        }
-        else {
-        // more than 2 arguments.
-        // Just move all existing files or directories to the last argument if it is a directory.
+        } else {
+            // more than 2 arguments.
+            // Just move all existing files or directories to the last argument if it is a directory.
             String path = currentDirectory.getAbsolutePath();
 
-            String destinationPath = path + File.separator + commandTokens.getLast();;
+            String destinationPath = path + File.separator + commandTokens.getLast();
+            ;
             File destinationFile = new File(destinationPath);
 
-            if (destinationFile.isDirectory()){
-                for (int i = 1 ; i < commandTokens.size()-1 ; ++i ){
+            if (destinationFile.isDirectory()) {
+                for (int i = 1; i < commandTokens.size() - 1; ++i) {
                     String sourcePath = path + File.separator + commandTokens.get(i);
                     File sourceFile = new File(sourcePath);
                     if (sourceFile.exists()) {
@@ -260,56 +252,57 @@ public class CommandLineInterpreter {
                         sourceFile.renameTo(newFileLocation);
                     }
                 }
-            }
-            else {
+            } else {
                 System.out.println("Destination Directory does not exist.\n");
             }
         }
     }
 
-<<<<<<< HEAD
-    public void rm( List<String> commandTokens ){
-        if (commandTokens.size()<2){
+
+    public void rm(List<String> commandTokens) {
+        if (commandTokens.size() < 2) {
             System.out.println("Invalid command syntax. Usage: rm <fileName>");
             return;
         }
         String path = currentDirectory.getAbsolutePath();
-        for (int i = 1 ; i < commandTokens.size() ; ++i){
-            String targetPath = path + File.separator + commandTokens.get(i);;
+        for (int i = 1; i < commandTokens.size(); ++i) {
+            String targetPath = path + File.separator + commandTokens.get(i);
+            ;
             File targetFile = new File(targetPath);
-            if (targetFile.isDirectory()){
-                System.out.println("rm: cannot remove " + commandTokens.get(i) +  " : Is a " + "directory");
+            if (targetFile.isDirectory()) {
+                System.out.println("rm: cannot remove " + commandTokens.get(i) + " : Is a " + "directory");
                 return;
             }
-            if (!targetFile.exists()){
+            if (!targetFile.exists()) {
                 System.out.println("rm: Target file does not exist: " + commandTokens.get(i));
                 return;
             }
         }
-        for (int i = 1 ; i < commandTokens.size() ; ++i){
-            String targetPath = path + File.separator + commandTokens.get(i);;
+        for (int i = 1; i < commandTokens.size(); ++i) {
+            String targetPath = path + File.separator + commandTokens.get(i);
+            ;
             File targetFile = new File(targetPath);
             targetFile.delete();
         }
-=======
+    }
+
     //cat concatenate (cat)
     public void cat(List<String> commandTokens) throws IOException {
         //filename
-        StringBuilder input= new StringBuilder();
+        StringBuilder input = new StringBuilder();
         //path of file before adding name
         input.append(getCurrentDirectory().getAbsolutePath());
-        if(commandTokens.size() == 1){
+        if (commandTokens.size() == 1) {
             //file name input from user
             Scanner reader = new Scanner(System.in);
             //read user input or check file name beside cat
             input.append(File.separator).append(reader.nextLine()).append(".txt");
-        }
-        else{
+        } else {
             //cat file1.txt  / input = file1.txt
             input.append(File.separator).append(commandTokens.get(1)).append(".txt");
         }
         //convert the path+file name to string
-        String filename =input.toString();
+        String filename = input.toString();
         // pass the path with name to file
         File fileToRead = new File(filename);
 
@@ -321,17 +314,16 @@ public class CommandLineInterpreter {
 
         //Scan file content
         Scanner readContent = new Scanner(fileToRead);
-        while(readContent.hasNextLine()){
-            String line=readContent.nextLine();
+        while (readContent.hasNextLine()) {
+            String line = readContent.nextLine();
             System.out.println(line);
         }
         readContent.close();
->>>>>>> 1f187744d6ca292a936a4d95b5bfe21bea27a204
+
     }
+
 
     public File getCurrentDirectory() {
         return currentDirectory;
     }
-
 }
-
