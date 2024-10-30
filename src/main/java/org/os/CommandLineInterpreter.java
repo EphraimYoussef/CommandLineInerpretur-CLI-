@@ -178,15 +178,29 @@ public class CommandLineInterpreter {
     }
 
     //removedir (rmdir)
-    public void rmdir(){
-        boolean deletionProcess =currentDirectory.delete();
-        if(deletionProcess){
-            System.out.println("Directory Deleted Succesfully!");
-            currentDirectory =currentDirectory.getParentFile();
+    public void rmdir(List<String> commandTokens){
+
+        if (commandTokens.size() <= 1) {
+            System.out.println("rmdir: missing argument");
+            return;
         }
 
-        else
-            System.out.println("Failed to Delete Directory (The files isn't Empty)");
+        String dir = String.join(" ", commandTokens.subList(1, commandTokens.size()));
+        File directoryToBeDeleted = new File(currentDirectory,dir);
+
+        if (directoryToBeDeleted != null && directoryToBeDeleted.exists() && directoryToBeDeleted.isDirectory()) {
+            boolean deletionProcess = directoryToBeDeleted.delete();
+            if(deletionProcess){
+                System.out.println("Directory Deleted Succesfully!");
+            }
+
+            else
+                System.out.println("Failed to Delete Directory (The files isn't Empty)");
+        } else {
+            System.out.println("cd: No such directory: " + dir);
+        }
+
+
 
     }
 

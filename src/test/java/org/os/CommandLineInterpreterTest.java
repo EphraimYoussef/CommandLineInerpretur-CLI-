@@ -115,5 +115,5 @@ class CommandLineInterpreterTest {
         assertEquals(outputStream.toString().trim(),expectedString,"Output should list only non-hidden files and directories");
     }
 
-    
+
 }
