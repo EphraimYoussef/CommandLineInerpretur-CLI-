@@ -72,8 +72,13 @@ public class Main {
             else if(command.equals("mv")){
                 cli.mv(commandslist);
             }
+<<<<<<< HEAD
             else if(command.equals("rm")){
                 cli.rm(commandslist);
+=======
+            else if(command.equals("cat")){
+                cli.cat(commandslist);
+>>>>>>> 1f187744d6ca292a936a4d95b5bfe21bea27a204
             }
             else {
                 // Execute other system commands
