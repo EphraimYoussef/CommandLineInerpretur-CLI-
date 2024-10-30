@@ -268,6 +268,31 @@ public class CommandLineInterpreter {
         }
     }
 
+    public void rm( List<String> commandTokens ){
+        if (commandTokens.size()<2){
+            System.out.println("Invalid command syntax. Usage: rm <fileName>");
+            return;
+        }
+        String path = currentDirectory.getAbsolutePath();
+        for (int i = 1 ; i < commandTokens.size() ; ++i){
+            String targetPath = path + File.separator + commandTokens.get(i);;
+            File targetFile = new File(targetPath);
+            if (targetFile.isDirectory()){
+                System.out.println("rm: cannot remove " + commandTokens.get(i) +  " : Is a " + "directory");
+                return;
+            }
+            if (!targetFile.exists()){
+                System.out.println("rm: Target file does not exist: " + commandTokens.get(i));
+                return;
+            }
+        }
+        for (int i = 1 ; i < commandTokens.size() ; ++i){
+            String targetPath = path + File.separator + commandTokens.get(i);;
+            File targetFile = new File(targetPath);
+            targetFile.delete();
+        }
+    }
+
     public File getCurrentDirectory() {
         return currentDirectory;
     }
