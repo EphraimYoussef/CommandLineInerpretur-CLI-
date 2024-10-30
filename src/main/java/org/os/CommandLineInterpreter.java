@@ -73,7 +73,7 @@ public class CommandLineInterpreter {
         int count = 1;
         if (files != null) {
             for (File file : files) {
-                // this condition to avoid hiddenfiles
+                // this condition to avoid hiddenFiles
                 if (file.isHidden())
                     continue;
                 if (file.isDirectory())
@@ -172,7 +172,7 @@ public class CommandLineInterpreter {
             File file = new File(FileName_path);
 
             if(file.createNewFile())
-                System.out.println("File Created Succesfully! at : " + FileName_path);
+                System.out.println("File Created Successfully! at : " + FileName_path);
             else
                 System.out.println("Failed to create File ");
 
@@ -193,7 +193,67 @@ public class CommandLineInterpreter {
 
     }
 
+    public void mv(List<String> commandTokens) {
+        if (commandTokens.size() < 3){
+            System.out.println("Error, Expected at least 2 arguments.\n");
+            return;
+        }
+        if (commandTokens.size() == 3) { // 2 arguments -> rename or move
+            String path = currentDirectory.getAbsolutePath();
 
+            String sourcePath = path + File.separator + commandTokens.get(1);
+            String destinationPath = path + File.separator + commandTokens.get(2);
+
+            File sourceFile = new File(sourcePath);
+            File destinationFile = new File(destinationPath);
+
+            if (sourceFile.exists()) {
+                if (destinationFile.isDirectory()) { // move to directory
+                    // Create new file object with destination directory + source file name
+                    File newFileLocation = new File(destinationFile, sourceFile.getName());
+                    if (sourceFile.renameTo(newFileLocation)) {
+                        System.out.println("File moved to " + newFileLocation.getPath());
+                    }
+                    else {
+                        System.out.println("Failed to move file.");
+                    }
+                }
+                else { // rename
+                    if (sourceFile.renameTo(destinationFile)) {
+                        System.out.println("File renamed to " + destinationFile.getPath());
+                    }
+                    else {
+                        System.out.println("Failed to rename file.");
+                    }
+                }
+            }
+            else { // Error.
+                System.out.println("Source file does not exist.");
+            }
+        }
+        else {
+        // more than 2 arguments.
+        // Just move all existing files or directories to the last argument if it is a directory.
+            String path = currentDirectory.getAbsolutePath();
+
+            String destinationPath = path + File.separator + commandTokens.getLast();;
+            File destinationFile = new File(destinationPath);
+
+            if (destinationFile.isDirectory()){
+                for (int i = 1 ; i < commandTokens.size()-1 ; ++i ){
+                    String sourcePath = path + File.separator + commandTokens.get(i);
+                    File sourceFile = new File(sourcePath);
+                    if (sourceFile.exists()) {
+                        File newFileLocation = new File(destinationFile, sourceFile.getName());
+                        sourceFile.renameTo(newFileLocation);
+                    }
+                }
+            }
+            else {
+                System.out.println("Destination Directory does not exist.\n");
+            }
+        }
+    }
 
     public File getCurrentDirectory() {
         return currentDirectory;
