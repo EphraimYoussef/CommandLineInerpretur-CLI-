@@ -30,7 +30,6 @@ public class CommandLineInterpreter {
     // Execute a system command using ProcessBuilder
     public void errorHandler(String command) {
         System.out.println("Error executing command: " + command + " not valid");
-
     }
 
     // Change directory (cd)
@@ -197,20 +196,21 @@ public class CommandLineInterpreter {
             System.out.println("rmdir: missing argument");
             return;
         }
+        for (int i = 1; i < commandTokens.size(); i++)
+        {
+            String dir = commandTokens.get(i);
+            File directoryToBeDeleted = new File(currentDirectory, dir);
 
-        String dir = String.join(" ", commandTokens.subList(1, commandTokens.size()));
-        File directoryToBeDeleted = new File(currentDirectory, dir);
-
-        if (directoryToBeDeleted != null && directoryToBeDeleted.exists() && directoryToBeDeleted.isDirectory()) {
-            boolean deletionProcess = directoryToBeDeleted.delete();
-            if (deletionProcess) {
-                System.out.println("Directory Deleted Succesfully!");
-            } else
-                System.out.println("Failed to Delete Directory (The files isn't Empty)");
-        } else {
-            System.out.println("cd: No such directory: " + dir);
+            if (directoryToBeDeleted != null && directoryToBeDeleted.exists() && directoryToBeDeleted.isDirectory()) {
+                boolean deletionProcess = directoryToBeDeleted.delete();
+                if (deletionProcess) {
+                    System.out.println("Directory Deleted Succesfully!");
+                } else
+                    System.out.println("Failed to Delete Directory (The files isn't Empty)");
+            } else {
+                System.out.println("cd: No such directory: " + dir);
+            }
         }
-
 
     }
 

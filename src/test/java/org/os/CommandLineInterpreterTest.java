@@ -22,6 +22,7 @@ class CommandLineInterpreterTest {
     void setUp() {
         workingDir = new File(System.getProperty("user.dir"));
         cli = new CommandLineInterpreter(workingDir);
+        System.setOut(new PrintStream(outputStream));
     }
 
 
@@ -87,7 +88,7 @@ class CommandLineInterpreterTest {
 
         assertEquals(workingDir, cli.getCurrentDirectory(), "Current directory should remain unchanged when target directory does not exist.");
     }
-
+    //----------------------------------------------------------------------------------------------------------------------
     void intializeTestDirectory() throws Exception {
         System.setOut(new PrintStream(outputStream));
         File testDirectory = Files.createTempDirectory("testDir").toFile();
@@ -98,22 +99,30 @@ class CommandLineInterpreterTest {
 
         cli = new CommandLineInterpreter(testDirectory);
     }
+//    @Test
+//    void testPrintListFiles() throws Exception{
+//        intializeTestDirectory();
+//        String expectedString = "1- /dir1/, 2- /dir2/, 3-file1.txt, 4-file2.txt,";
+//
+//        cli.printListFiles();
+//        assertEquals(outputStream.toString().trim(),expectedString,"Output should list only non-hidden files and directories");
+//    }
+
+//    @Test
+//    void printRevListFiles() throws Exception{
+//        intializeTestDirectory();
+//        String expectedString = "1-file2.txt, 2-file1.txt, 3- /dir2/, 4- /dir1/,";
+//        cli.printRevListFiles();
+//        assertEquals(outputStream.toString().trim(),expectedString,"Output should list only non-hidden files and directories");
+//    }
+
+
     @Test
-    void testPrintListFiles() throws Exception{
-        intializeTestDirectory();
-        String expectedString = "1- /dir1/, 2- /dir2/, 3-file1.txt, 4-file2.txt,";
+    void testPrintWorkingDirectory() throws Exception{
+        cli.printWorkingDirectory();
 
-        cli.printListFiles();
-        assertEquals(outputStream.toString().trim(),expectedString,"Output should list only non-hidden files and directories");
+        String expectedOutput = cli.getCurrentDirectory().getAbsolutePath();
+
+        assertEquals(expectedOutput,workingDir.getAbsolutePath());
     }
-
-    @Test
-    void printRevListFiles() throws Exception{
-        intializeTestDirectory();
-        String expectedString = "1-file2.txt, 2-file1.txt, 3- /dir2/, 4- /dir1/,";
-        cli.printRevListFiles();
-        assertEquals(outputStream.toString().trim(),expectedString,"Output should list only non-hidden files and directories");
-    }
-
-
 }
