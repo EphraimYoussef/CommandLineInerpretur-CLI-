@@ -30,6 +30,7 @@ public class CommandLineInterpreter {
     // Execute a system command using ProcessBuilder
     public void errorHandler(String command) {
         System.out.println("Error executing command: " + command + " not valid");
+
     }
 
     // Change directory (cd)
@@ -151,7 +152,7 @@ public class CommandLineInterpreter {
 
             //create directory with given path
             if (directory.mkdirs())
-                System.out.println("Directory Created Succesfully! at : " + DirectoryName_path);
+                System.out.println("Directory Created Successfully! at : " + DirectoryName_path);
             else
                 System.out.println("Failed to create Directory ");
         }
@@ -163,7 +164,7 @@ public class CommandLineInterpreter {
             //input after touch
             StringBuilder input = new StringBuilder(commandTokens.get(i));
 
-            //Address of current Directory that we will put newfile in
+            //Address of current Directory that we will put newFile in
             String path = currentDirectory.getAbsolutePath();
 
             //Handling if file inside dir !
@@ -189,15 +190,14 @@ public class CommandLineInterpreter {
         }
     }
 
-    //removedir (rmdir)
+    //removeDir (rmdir)
     public void rmdir(List<String> commandTokens) {
 
         if (commandTokens.size() <= 1) {
             System.out.println("rmdir: missing argument");
             return;
         }
-        for (int i = 1; i < commandTokens.size(); i++)
-        {
+        for (int i = 1; i < commandTokens.size(); i++) {
             String dir = commandTokens.get(i);
             File directoryToBeDeleted = new File(currentDirectory, dir);
 
@@ -210,16 +210,16 @@ public class CommandLineInterpreter {
             } else {
                 System.out.println("cd: No such directory: " + dir);
             }
-        if (directoryToBeDeleted.exists() && directoryToBeDeleted.isDirectory()) {
-            boolean deletionProcess = directoryToBeDeleted.delete();
-            if (deletionProcess) {
-                System.out.println("Directory Deleted Successfully!");
-            } else
-                System.out.println("Failed to Delete Directory (The files isn't Empty)");
-        } else {
-            System.out.println("cd: No such directory: " + dir);
+            if (directoryToBeDeleted.exists() && directoryToBeDeleted.isDirectory()) {
+                boolean deletionProcess = directoryToBeDeleted.delete();
+                if (deletionProcess) {
+                    System.out.println("Directory Deleted Successfully!");
+                } else
+                    System.out.println("Failed to Delete Directory (The files isn't Empty)");
+            } else {
+                System.out.println("cd: No such directory: " + dir);
+            }
         }
-
 
     }
 
@@ -290,7 +290,6 @@ public class CommandLineInterpreter {
         String path = currentDirectory.getAbsolutePath();
         for (int i = 1; i < commandTokens.size(); ++i) {
             String targetPath = path + File.separator + commandTokens.get(i);
-            ;
             File targetFile = new File(targetPath);
             if (targetFile.isDirectory()) {
                 System.out.println("rm: cannot remove " + commandTokens.get(i) + " : Is a " + "directory");

@@ -84,6 +84,7 @@ public class Main {
             else if(command.equals("cat")){
                 cli.cat(commandslist);
             }
+
             else {
                 // Execute other system commands
                 cli.errorHandler(command);
