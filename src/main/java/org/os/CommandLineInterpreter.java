@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Scanner;
 
 public class CommandLineInterpreter {
 
@@ -266,6 +267,42 @@ public class CommandLineInterpreter {
                 System.out.println("Destination Directory does not exist.\n");
             }
         }
+    }
+
+    //cat concatenate
+    public void cat(List<String> commandTokens) throws IOException {
+        //filename
+        StringBuilder input= new StringBuilder();
+        //path of file before adding name
+        input.append(getCurrentDirectory().getAbsolutePath());
+        if(commandTokens.size() == 1){
+            //file name input from user
+            Scanner reader = new Scanner(System.in);
+            //read user input or check file name beside cat
+            input.append(File.separator).append(reader.nextLine()).append(".txt");
+        }
+        else{
+            //cat file1.txt  / input = file1.txt
+            input.append(File.separator).append(commandTokens.get(1)).append(".txt");
+        }
+        //convert the path+file name to string
+        String filename =input.toString();
+        // pass the path with name to file
+        File fileToRead = new File(filename);
+
+        // Check if the file exists and is readable
+        if (!fileToRead.exists() || !fileToRead.canRead()) {
+            System.out.println("File not found or cannot be read.");
+            return;
+        }
+
+        //Scan file content
+        Scanner readContent = new Scanner(fileToRead);
+        while(readContent.hasNextLine()){
+            String line=readContent.nextLine();
+            System.out.println(line);
+        }
+        readContent.close();
     }
 
     public File getCurrentDirectory() {
