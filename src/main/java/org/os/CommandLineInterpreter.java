@@ -163,6 +163,7 @@ public class CommandLineInterpreter {
         for (int i = 1; i < commandTokens.size(); i++) {
             //input after touch
             StringBuilder input = new StringBuilder(commandTokens.get(i));
+            String inputFile = input.toString();
 
             //Address of current Directory that we will put newFile in
             String path = currentDirectory.getAbsolutePath();
@@ -173,11 +174,22 @@ public class CommandLineInterpreter {
             //to handle if there is directories
             int index = input.lastIndexOf(finder);
 
-            if (index != -1)
-                input.setCharAt(index, File.separatorChar);
+            if (index != -1) {
+                //get directory name
+                String directoryName = inputFile.substring(0, index);
+
+                path = path + File.separator + directoryName;
+
+                //make the directory
+                File directory = new File(path);
+                directory.mkdirs();
+
+                //file name
+                inputFile = input.substring(index + 1);
+            }
 
             //creating the path that we will pass to file function
-            String FileName_path = path + File.separator + input;
+            String FileName_path = path + File.separator + inputFile;
 
             File file = new File(FileName_path);
 
