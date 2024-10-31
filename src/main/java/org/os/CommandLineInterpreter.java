@@ -196,7 +196,7 @@ public class CommandLineInterpreter {
             if (file.createNewFile())
                 System.out.println("File Created Successfully! at : " + FileName_path);
             else
-                System.out.println("Failed to create File ");
+                System.out.println("Failed to create File");
 
 
         }
