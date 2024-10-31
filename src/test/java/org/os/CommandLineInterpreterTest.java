@@ -1,10 +1,13 @@
 package org.os;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -16,15 +19,18 @@ class CommandLineInterpreterTest {
     private CommandLineInterpreter cli;
     private File workingDir;
     private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
+    private File testDirectory;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         workingDir = new File(System.getProperty("user.dir"));
         cli = new CommandLineInterpreter(workingDir);
         System.setOut(new PrintStream(outputStream));
-    }
 
+        // Create a temporary test directory and initialize the CLI with it
+        testDirectory = Files.createTempDirectory("testDir").toFile();
+        cli = new CommandLineInterpreter(testDirectory);
+    }
 
     //cd
     @Test
@@ -124,5 +130,39 @@ class CommandLineInterpreterTest {
         String expectedOutput = cli.getCurrentDirectory().getAbsolutePath();
 
         assertEquals(expectedOutput,workingDir.getAbsolutePath());
+    }
+
+    @Test
+    void testmkdir(){
+        List<String> commandTokens = Arrays.asList("mkdir","newDir");
+
+        cli.mkdir(commandTokens);
+
+        File createdDirectory = new File(testDirectory, "newDir");
+
+        //make sure that the directory is created using mkdir and that it is a directory
+        assertTrue(createdDirectory.exists() && createdDirectory.isDirectory(), "The directory should be created successfully.");
+    }
+
+    // the commented directory makes this test fail
+    @Test
+    void testMkdirFailsIfDirectoryExists() {
+        // Manually create the directory before running mkdir
+        File existingDirectory = new File(testDirectory, "existingDir");
+//        File existingDirectory2 = new File(testDirectory, "existingDir2");
+
+        //this add the existingDirectory to the current directory
+        existingDirectory.mkdir();
+
+
+        List<String> commandTokens = Arrays.asList("mkdir", "existingDir");
+//        List<String> commandTokens2 = Arrays.asList("mkdir", "existingDir2");
+
+        cli.mkdir(commandTokens);
+//        cli.mkdir(commandTokens2);
+
+        // Verify the output contains the message that indicates failure
+        String expectedOutput = "Failed to create Directory";
+        assertTrue(outputStream.toString().trim().contains(expectedOutput), "Output should indicate failure to create the directory as it already exists.");
     }
 }
