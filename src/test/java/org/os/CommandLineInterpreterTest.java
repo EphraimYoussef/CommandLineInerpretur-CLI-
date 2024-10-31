@@ -1,6 +1,6 @@
 package org.os;
 
-import org.junit.jupiter.api.AfterEach;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.File;
@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.file.attribute.DosFileAttributeView;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -101,26 +102,42 @@ class CommandLineInterpreterTest {
         new File(testDirectory, "file2.txt").createNewFile();
         new File(testDirectory, "dir1").mkdir();
         new File(testDirectory, "dir2").mkdir();
+        new File(testDirectory, "dir2").mkdir();
 
+        // make hidden directory
+        File hiddenDir = new File(testDirectory, "hiddenDir");
+        hiddenDir.mkdir();
+        Files.getFileAttributeView(hiddenDir.toPath(), DosFileAttributeView.class)
+                .setHidden(true);
         cli = new CommandLineInterpreter(testDirectory);
     }
-//    @Test
-//    void testPrintListFiles() throws Exception{
-//        intializeTestDirectory();
-//        String expectedString = "1- /dir1/, 2- /dir2/, 3-file1.txt, 4-file2.txt,";
-//
-//        cli.printListFiles();
-//        assertEquals(outputStream.toString().trim(),expectedString,"Output should list only non-hidden files and directories");
-//    }
+    @Test
+    void testPrintListFiles() throws Exception{
+        intializeTestDirectory();
+        String expectedString = "1- /dir1/, 2- /dir2/, 3-file1.txt, 4-file2.txt,";
+        List<String> commandTokens = Arrays.asList("ls");
+        cli.printListFiles(commandTokens);
+        assertEquals(outputStream.toString().trim(),expectedString,"Output should list only non-hidden files and directories");
+    }
 
-//    @Test
-//    void printRevListFiles() throws Exception{
-//        intializeTestDirectory();
-//        String expectedString = "1-file2.txt, 2-file1.txt, 3- /dir2/, 4- /dir1/,";
-//        cli.printRevListFiles();
-//        assertEquals(outputStream.toString().trim(),expectedString,"Output should list only non-hidden files and directories");
-//    }
+    @Test
+    void testPrintAllListFiles() throws Exception{
+        intializeTestDirectory();
+        String expectedString = "1- /dir1/, 2- /dir2/, 3-file1.txt, 4-file2.txt, 5- /hiddenDir/,";
+        List<String> commandTokens = Arrays.asList("ls","-a");
+        cli.printAllListFiles(commandTokens);
+        assertEquals(outputStream.toString().trim(),expectedString,"Output should list all files and directories");
+    }
 
+    @Test
+    void printRevListFiles() throws Exception{
+        intializeTestDirectory();
+        String expectedString = "1-file2.txt, 2-file1.txt, 3- /dir2/, 4- /dir1/,";
+        List<String> commandTokens = Arrays.asList("ls","-r");
+
+        cli.printRevListFiles(commandTokens);
+        assertEquals(outputStream.toString().trim(),expectedString,"Output should list only non-hidden files and directories but reversed");
+    }
 
     @Test
     void testPrintWorkingDirectory() throws Exception{
@@ -225,20 +242,6 @@ class CommandLineInterpreterTest {
 
         assertTrue(outputStream.toString().trim().contains(expectedOutput), "utput should indicate failure to delete the directory." );
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
