@@ -19,7 +19,6 @@ class CommandLineInterpreterTest {
     private CommandLineInterpreter cli;
     private File workingDir;
     private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    private File testDirectory;
 
     @BeforeEach
     void setUp() throws IOException {
@@ -148,18 +147,18 @@ class CommandLineInterpreterTest {
     @Test
     void testMkdirFailsIfDirectoryExists() {
         // Manually create the directory before running mkdir
-        File existingDirectory = new File(workingDir, "existingDir");
-        //File existingDirectory2 = new File(testDirectory, "existingDir2");
+//        File existingDirectory = new File(workingDir, "existingDir");
+        File existingDirectory2 = new File(workingDir, "existingDir2");
 
         //this add the existingDirectory to the current directory
-        existingDirectory.mkdir();
+//        existingDirectory.mkdir();
 
 
-        List<String> commandTokens = Arrays.asList("mkdir", "existingDir");
-        //List<String> commandTokens2 = Arrays.asList("mkdir", "existingDir2");
+//        List<String> commandTokens = Arrays.asList("mkdir", "existingDir");
+        List<String> commandTokens2 = Arrays.asList("mkdir", "existingDir2");
 
-        cli.mkdir(commandTokens);
-        // cli.mkdir(commandTokens2);
+//        cli.mkdir(commandTokens);
+         cli.mkdir(commandTokens2);
 
         // Verify the output contains the message that indicates failure
         String expectedOutput = "Failed to create Directory";
@@ -203,5 +202,13 @@ class CommandLineInterpreterTest {
         String expectedOutput = "Failed to create File";
 
         assertTrue(outputStream.toString().trim().contains(expectedOutput), "Output should indicate failure to create the file.");
+    }
+
+    @Test void testRemoveOneDirectory() throws Exception{
+        List<String> commandTokens = Arrays.asList("mkdir","newDir");
+
+        cli.mkdir(commandTokens);
+
+        File createdDirectory = new File(workingDir, "newDir");
     }
 }
