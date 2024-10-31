@@ -3,14 +3,13 @@ package org.os;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.io.File;
-import java.io.IOException;
+
+import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.nio.file.attribute.DosFileAttributeView;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -423,6 +422,40 @@ class CommandLineInterpreterTest {
         assertFalse(file1.exists(), "First file should be deleted successfully");
         assertFalse(file2.exists(), "Second file should be deleted successfully");
     }
+
+    @Test
+    void testCatNoArguments() throws IOException {
+        // Simulate user input
+        InputStream input = new ByteArrayInputStream("Hello World\nThis is a test\nstop\n".getBytes());
+        System.setIn(input);
+
+        List<String> commandTokens = Arrays.asList("cat");
+        cli.cat(commandTokens);
+
+        String expectedOutput = "Enter text (type 'stop' to finish):"+System.lineSeparator()+"Hello World"+System.lineSeparator()+"This is a test";
+
+        assertEquals(outputStream.toString().trim(),expectedOutput);
+    }
+
+//    @Test
+//    void testCatWriteToFile() throws IOException {
+//        // Simulate user input
+//        InputStream input = new ByteArrayInputStream("Line 1\nLine 2\nstop\n".getBytes());
+//        System.setIn(input);
+//        List<String> commandTokens = Arrays.asList("cat", ">", "testfile");
+//        cli.cat(commandTokens);
+//
+//        // Check that the file is created and contains the correct content
+//        File testFile = new File(workingDir, "testfile");
+//        testFile.createNewFile();
+//        assertTrue(testFile.exists());
+//
+//        List<String> lines = Files.readAllLines(testFile.toPath());
+//        assertEquals(3, lines.size());
+//        assertEquals("Line 1", lines.get(1));
+//        assertEquals("Line 2", lines.get(2));
+//    }
+//
 }
 
 //---------------------------------------------------------------------------
