@@ -83,17 +83,17 @@ public class CommandLineInterpreter {
             }
         }
         //case of ls >
-        if(commandTokens.size() == 3 && Objects.equals(commandTokens.get(1), ">")) {
+        if (commandTokens.size() == 3 && Objects.equals(commandTokens.get(1), ">")) {
             //for >
             String toSend = list.toString();
-            greaterThan(toSend,commandTokens.get(2));
+            greaterThan(toSend, commandTokens.get(2));
             return;
         }
         //case of ls >>
-        else if(commandTokens.size() == 3 && Objects.equals(commandTokens.get(1), ">>")) {
+        else if (commandTokens.size() == 3 && Objects.equals(commandTokens.get(1), ">>")) {
             //for >
             String toSend = list.toString();
-            greaterThanThan(toSend,commandTokens.get(2));
+            greaterThanThan(toSend, commandTokens.get(2));
             return;
         }
         System.out.println(list);
@@ -104,7 +104,7 @@ public class CommandLineInterpreter {
         files = currentDirectory.listFiles();
         StringBuilder list = new StringBuilder();
         int count = 1;
-        if(files != null){
+        if (files != null) {
             for (int i = files.length - 1; i >= 0; i--) {
                 // this condition to avoid hiddenFiles
                 if (files[i].isHidden())
@@ -119,17 +119,17 @@ public class CommandLineInterpreter {
         }
 
         //case of ls >
-        if(commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">")) {
+        if (commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">")) {
             //for >
             String toSend = list.toString();
-            greaterThan(toSend,commandTokens.get(3));
+            greaterThan(toSend, commandTokens.get(3));
             return;
         }
         //case of ls >>
-        else if(commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">>")) {
+        else if (commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">>")) {
             //for >
             String toSend = list.toString();
-            greaterThanThan(toSend,commandTokens.get(3));
+            greaterThanThan(toSend, commandTokens.get(3));
             return;
         }
         System.out.println(list.toString());
@@ -150,17 +150,17 @@ public class CommandLineInterpreter {
             }
         }
         //case of ls >
-        if(commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">")) {
+        if (commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">")) {
             //for >
             String toSend = list.toString();
-            greaterThan(toSend,commandTokens.get(3));
+            greaterThan(toSend, commandTokens.get(3));
             return;
         }
         //case of ls >>
-        else if(commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">>")) {
+        else if (commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">>")) {
             //for >
             String toSend = list.toString();
-            greaterThanThan(toSend,commandTokens.get(3));
+            greaterThanThan(toSend, commandTokens.get(3));
             return;
         }
         System.out.println(list.toString());
@@ -369,11 +369,15 @@ public class CommandLineInterpreter {
         // case of cat  alone
         if (commandTokens.size() == 1) {
             Scanner reader = new Scanner(System.in);
-            System.out.println("Enter text:");
-            // Read input and then output
-            String line = reader.nextLine();
-            System.out.println(line);
-
+            System.out.println("Enter text (type 'stop' to finish):");
+            // Read input until "stop" is typed
+            while (true) {
+                String line = reader.nextLine();
+                if (line.equals("stop")) {
+                    break;
+                }
+                System.out.println(line);
+            }
         } else {
             //Here cat > filename or cat >>filename
             String option = commandTokens.get(1);

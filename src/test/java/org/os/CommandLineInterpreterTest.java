@@ -421,3 +421,6 @@ class CommandLineInterpreterTest {
         assertFalse(file2.exists(), "Second file should be deleted successfully");
     }
 }
+
+//---------------------------------------------------------------------------
+// ls , ls -r , ls -a tests
