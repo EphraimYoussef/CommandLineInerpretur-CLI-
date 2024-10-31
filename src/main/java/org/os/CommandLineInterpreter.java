@@ -83,17 +83,17 @@ public class CommandLineInterpreter {
             }
         }
         //case of ls >
-        if(commandTokens.size() == 3 && Objects.equals(commandTokens.get(1), ">")) {
+        if (commandTokens.size() == 3 && Objects.equals(commandTokens.get(1), ">")) {
             //for >
             String toSend = list.toString();
-            greaterThan(toSend,commandTokens.get(2));
+            greaterThan(toSend, commandTokens.get(2));
             return;
         }
         //case of ls >>
-        else if(commandTokens.size() == 3 && Objects.equals(commandTokens.get(1), ">>")) {
+        else if (commandTokens.size() == 3 && Objects.equals(commandTokens.get(1), ">>")) {
             //for >
             String toSend = list.toString();
-            greaterThanThan(toSend,commandTokens.get(2));
+            greaterThanThan(toSend, commandTokens.get(2));
             return;
         }
         System.out.println(list);
@@ -104,7 +104,7 @@ public class CommandLineInterpreter {
         files = currentDirectory.listFiles();
         StringBuilder list = new StringBuilder();
         int count = 1;
-        if(files != null){
+        if (files != null) {
             for (int i = files.length - 1; i >= 0; i--) {
                 // this condition to avoid hiddenFiles
                 if (files[i].isHidden())
@@ -119,17 +119,17 @@ public class CommandLineInterpreter {
         }
 
         //case of ls >
-        if(commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">")) {
+        if (commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">")) {
             //for >
             String toSend = list.toString();
-            greaterThan(toSend,commandTokens.get(3));
+            greaterThan(toSend, commandTokens.get(3));
             return;
         }
         //case of ls >>
-        else if(commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">>")) {
+        else if (commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">>")) {
             //for >
             String toSend = list.toString();
-            greaterThanThan(toSend,commandTokens.get(3));
+            greaterThanThan(toSend, commandTokens.get(3));
             return;
         }
         System.out.println(list.toString());
@@ -150,17 +150,17 @@ public class CommandLineInterpreter {
             }
         }
         //case of ls >
-        if(commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">")) {
+        if (commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">")) {
             //for >
             String toSend = list.toString();
-            greaterThan(toSend,commandTokens.get(3));
+            greaterThan(toSend, commandTokens.get(3));
             return;
         }
         //case of ls >>
-        else if(commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">>")) {
+        else if (commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">>")) {
             //for >
             String toSend = list.toString();
-            greaterThanThan(toSend,commandTokens.get(3));
+            greaterThanThan(toSend, commandTokens.get(3));
             return;
         }
         System.out.println(list.toString());
@@ -358,60 +358,71 @@ public class CommandLineInterpreter {
         StringBuilder input = new StringBuilder();
         //path of file before adding name
         input.append(getCurrentDirectory().getAbsolutePath());
-        // case of cat or cat > or cat >>
-        if (commandTokens.size() == 1 || Objects.equals(commandTokens.get(1), ">")|| Objects.equals(commandTokens.get(1), ">>")) {
-            //file name input from user
+
+        // case of cat  alone
+        if (commandTokens.size() == 1) {
             Scanner reader = new Scanner(System.in);
-            //read user input or check file name beside cat
-            input.append(File.separator).append(reader.nextLine()).append(".txt");
-        }
-        else {
-            //cat file1.txt  / input = file1.txt
-            input.append(File.separator).append(commandTokens.get(1)).append(".txt");
-        }
-
-
-        //convert the path+file name to string
-        String filename = input.toString();
-        // pass the path with name to file
-        File fileToRead = new File(filename);
-
-        // Check if the file exists and is readable
-        if (!fileToRead.exists() || !fileToRead.canRead()) {
-            System.out.println("File not found or cannot be read.");
-            return;
-        }
-        //String Builder for > , >>
-        StringBuilder output = new StringBuilder();
-
-        //Scan file content
-        Scanner readContent = new Scanner(fileToRead);
-        while (readContent.hasNextLine()) {
-            String line = readContent.nextLine();
-            output.append(line);
+            System.out.println("Enter text:");
+            // Read input and then output
+            String line = reader.nextLine();
             System.out.println(line);
+
+        } else {
+            //Here cat > filename or cat >>filename
+            String option = commandTokens.get(1);
+            // Handle cat > file , cat >> file case
+            if (Objects.equals(option, ">") || Objects.equals(option, ">>")) {
+                String filename = commandTokens.get(2);
+                StringBuilder userInput = new StringBuilder();   // StringBuilder for user input
+
+                // user input until "stop"
+                Scanner reader = new Scanner(System.in);
+                System.out.println("Enter text (type 'stop' to finish):");
+                while (true) {
+                    String line = reader.nextLine();
+                    if (line.equals("stop")) {
+                        break;
+                    }
+                    //system line seperator is "\n"
+                    userInput.append(line).append(System.lineSeparator());
+                }
+
+                // Redirect to either `greaterThan` or `greaterThanThan` based on the option
+                String content = userInput.toString();
+                if (option.equals(">")) {
+                    greaterThan(content, filename);
+                } else if (option.equals(">>")) {
+                    greaterThanThan(content, filename);
+                }
+            }
+            // `cat filename`
+            else {
+                input.append(File.separator).append(option).append(".txt");
+                //convert the path+file name to string
+                String filename = input.toString();
+                // pass the path with name to file
+                File fileToRead = new File(filename);
+
+                // Check if the file exists and is readable
+                if (!fileToRead.exists() || !fileToRead.canRead()) {
+                    System.out.println("File not found or cannot be read.");
+                    return;
+                }
+                //Scan file content
+                Scanner readContent = new Scanner(fileToRead);
+                while (readContent.hasNextLine()) {
+                    String line = readContent.nextLine();
+                    System.out.println(line);
+                }
+                readContent.close();
+            }
         }
-        readContent.close();
-
-        //case of cat >
-        if(Objects.equals(commandTokens.get(1), ">")) {
-            //for >
-            String toSend = output.toString();
-            greaterThan(toSend,commandTokens.get(2));
-        }
-        //case of cat >>
-        else if(Objects.equals(commandTokens.get(1), ">>")) {
-            //for >
-            String toSend = output.toString();
-            greaterThanThan(toSend,commandTokens.get(2));
-        }
-
-
-
     }
+
 
     //Redirect output (>)
     public void greaterThan(String output, String filename) throws IOException {
+        //toSend array is incase of touch if there isn't file so we pass array to create
         List<String> toSend = new ArrayList<String>();
         toSend.add(filename);
 
@@ -433,6 +444,7 @@ public class CommandLineInterpreter {
 
     //Redirect output (>>)
     public void greaterThanThan(String output, String filename) throws IOException {
+        //toSend array is incase of touch if there isn't file so we pass array to create
         List<String> toSend = new ArrayList<String>();
         toSend.add(filename);
 
@@ -445,8 +457,8 @@ public class CommandLineInterpreter {
         if (!file_checker.exists()) {
             touch(toSend);
         }
-        //path to file
-        FileWriter file = new FileWriter(path.toString(),true);
+        //path to file  , true is for append
+        FileWriter file = new FileWriter(path.toString(), true);
         file.write(output);
         file.close();
 
