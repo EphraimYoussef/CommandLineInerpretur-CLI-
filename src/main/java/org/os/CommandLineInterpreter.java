@@ -67,7 +67,6 @@ public class CommandLineInterpreter {
     //  Lists the contents (files & directories) of the current directory sorted alphabetically
     //except . starters (ls)
     public void printListFiles(List<String> commandTokens) throws IOException {
-        commandTokens = List.of(commandTokens.get(0).split(" "));
         files = currentDirectory.listFiles();
         StringBuilder list = new StringBuilder();
         int count = 1;
@@ -83,12 +82,14 @@ public class CommandLineInterpreter {
                 count++;
             }
         }
+        //case of ls >
         if(commandTokens.size() == 3 && Objects.equals(commandTokens.get(1), ">")) {
             //for >
             String toSend = list.toString();
             greaterThan(toSend,commandTokens.get(2));
             return;
         }
+        //case of ls >>
         else if(commandTokens.size() == 3 && Objects.equals(commandTokens.get(1), ">>")) {
             //for >
             String toSend = list.toString();
@@ -99,26 +100,43 @@ public class CommandLineInterpreter {
     }
 
     //List but reversed (ls -r)
-    public void printRevListFiles() {
+    public void printRevListFiles(List<String> commandTokens) throws IOException {
         files = currentDirectory.listFiles();
         StringBuilder list = new StringBuilder();
         int count = 1;
-        for (int i = files.length - 1; i >= 0; i--) {
-            // this condition to avoid hiddenfiles
-            if (files[i].isHidden())
-                continue;
-            if (files[i].isDirectory())
-                list.append(count).append("- /").append(files[i].getName()).append("/, ");
-            else
-                list.append(count).append("-").append(files[i].getName()).append(", ");
-            count++;
+        if(files != null){
+            for (int i = files.length - 1; i >= 0; i--) {
+                // this condition to avoid hiddenFiles
+                if (files[i].isHidden())
+                    continue;
+                if (files[i].isDirectory())
+                    list.append(count).append("- /").append(files[i].getName()).append("/, ");
+                else
+                    list.append(count).append("-").append(files[i].getName()).append(", ");
+                count++;
 
+            }
+        }
+
+        //case of ls >
+        if(commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">")) {
+            //for >
+            String toSend = list.toString();
+            greaterThan(toSend,commandTokens.get(3));
+            return;
+        }
+        //case of ls >>
+        else if(commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">>")) {
+            //for >
+            String toSend = list.toString();
+            greaterThanThan(toSend,commandTokens.get(3));
+            return;
         }
         System.out.println(list.toString());
     }
 
     //  Lists all contents including . starter (ls -a)
-    public void printAllListFiles() {
+    public void printAllListFiles(List<String> commandTokens) throws IOException {
         files = currentDirectory.listFiles();
         StringBuilder list = new StringBuilder();
         int count = 1;
@@ -131,20 +149,34 @@ public class CommandLineInterpreter {
                 count++;
             }
         }
+        //case of ls >
+        if(commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">")) {
+            //for >
+            String toSend = list.toString();
+            greaterThan(toSend,commandTokens.get(3));
+            return;
+        }
+        //case of ls >>
+        else if(commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">>")) {
+            //for >
+            String toSend = list.toString();
+            greaterThanThan(toSend,commandTokens.get(3));
+            return;
+        }
         System.out.println(list.toString());
     }
 
-    //makedir (mkdir)
+    //makeDir (mkdir)
     public void mkdir(List<String> commandTokens) {
         for (int i = 1; i < commandTokens.size(); i++) {
             String input = commandTokens.get(i);
 
-            // Address of current Directory that we will put newdir in
+            // Address of current Directory that we will put newDir in
             String Path = getCurrentDirectory().getAbsolutePath();
 
 
             //created the path of created dir by merging path + \ + name
-            //seprator to make /
+            //separator to make /
             //makes
             String DirectoryName_path = Path + File.separator + input;
 
@@ -152,7 +184,7 @@ public class CommandLineInterpreter {
 
             //create directory with given path
             if (directory.mkdirs())
-                System.out.println("Directory Created Succesfully! at : " + DirectoryName_path);
+                System.out.println("Directory Created Successfully! at : " + DirectoryName_path);
             else
                 System.out.println("Failed to create Directory ");
         }
@@ -163,8 +195,9 @@ public class CommandLineInterpreter {
         for (int i = 1; i < commandTokens.size(); i++) {
             //input after touch
             StringBuilder input = new StringBuilder(commandTokens.get(i));
+            String inputFile = input.toString();
 
-            //Address of current Directory that we will put newfile in
+            //Address of current Directory that we will put newFile in
             String path = currentDirectory.getAbsolutePath();
 
             //Handling if file inside dir !
@@ -173,44 +206,64 @@ public class CommandLineInterpreter {
             //to handle if there is directories
             int index = input.lastIndexOf(finder);
 
-            if (index != -1)
-                input.setCharAt(index, File.separatorChar);
+            if (index != -1) {
+                //get directory name
+                String directoryName = inputFile.substring(0, index);
+
+                path = path + File.separator + directoryName;
+
+                //make the directory
+                File directory = new File(path);
+                directory.mkdirs();
+
+                //file name
+                inputFile = input.substring(index + 1);
+            }
 
             //creating the path that we will pass to file function
-            String FileName_path = path + File.separator + input;
+            String FileName_path = path + File.separator + inputFile;
 
             File file = new File(FileName_path);
 
             if (file.createNewFile())
                 System.out.println("File Created Successfully! at : " + FileName_path);
             else
-                System.out.println("Failed to create File ");
+                System.out.println("Failed to create File");
 
 
         }
     }
 
-    //removedir (rmdir)
+    //removeDir (rmdir)
     public void rmdir(List<String> commandTokens) {
 
         if (commandTokens.size() <= 1) {
             System.out.println("rmdir: missing argument");
             return;
         }
+        for (int i = 1; i < commandTokens.size(); i++) {
+            String dir = commandTokens.get(i);
+            File directoryToBeDeleted = new File(currentDirectory, dir);
 
-        String dir = String.join(" ", commandTokens.subList(1, commandTokens.size()));
-        File directoryToBeDeleted = new File(currentDirectory, dir);
-
-        if (directoryToBeDeleted != null && directoryToBeDeleted.exists() && directoryToBeDeleted.isDirectory()) {
-            boolean deletionProcess = directoryToBeDeleted.delete();
-            if (deletionProcess) {
-                System.out.println("Directory Deleted Succesfully!");
-            } else
-                System.out.println("Failed to Delete Directory (The files isn't Empty)");
-        } else {
-            System.out.println("cd: No such directory: " + dir);
+            if (directoryToBeDeleted != null && directoryToBeDeleted.exists() && directoryToBeDeleted.isDirectory()) {
+                boolean deletionProcess = directoryToBeDeleted.delete();
+                if (deletionProcess) {
+                    System.out.println("Directory Deleted Succesfully!");
+                } else
+                    System.out.println("Failed to Delete Directory (The files isn't Empty)");
+            } else {
+                System.out.println("cd: No such directory: " + dir);
+            }
+            if (directoryToBeDeleted.exists() && directoryToBeDeleted.isDirectory()) {
+                boolean deletionProcess = directoryToBeDeleted.delete();
+                if (deletionProcess) {
+                    System.out.println("Directory Deleted Successfully!");
+                } else
+                    System.out.println("Failed to Delete Directory (The files isn't Empty)");
+            } else {
+                System.out.println("cd: No such directory: " + dir);
+            }
         }
-
 
     }
 
@@ -281,7 +334,6 @@ public class CommandLineInterpreter {
         String path = currentDirectory.getAbsolutePath();
         for (int i = 1; i < commandTokens.size(); ++i) {
             String targetPath = path + File.separator + commandTokens.get(i);
-            ;
             File targetFile = new File(targetPath);
             if (targetFile.isDirectory()) {
                 System.out.println("rm: cannot remove " + commandTokens.get(i) + " : Is a " + "directory");
@@ -306,20 +358,19 @@ public class CommandLineInterpreter {
         StringBuilder input = new StringBuilder();
         //path of file before adding name
         input.append(getCurrentDirectory().getAbsolutePath());
-
-        if (commandTokens.get(2) == ">") {
-
-        }
-
-        if (commandTokens.size() == 1) {
+        // case of cat or cat > or cat >>
+        if (commandTokens.size() == 1 || Objects.equals(commandTokens.get(1), ">")|| Objects.equals(commandTokens.get(1), ">>")) {
             //file name input from user
             Scanner reader = new Scanner(System.in);
             //read user input or check file name beside cat
             input.append(File.separator).append(reader.nextLine()).append(".txt");
-        } else {
+        }
+        else {
             //cat file1.txt  / input = file1.txt
             input.append(File.separator).append(commandTokens.get(1)).append(".txt");
         }
+
+
         //convert the path+file name to string
         String filename = input.toString();
         // pass the path with name to file
@@ -330,14 +381,33 @@ public class CommandLineInterpreter {
             System.out.println("File not found or cannot be read.");
             return;
         }
+        //String Builder for > , >>
+        StringBuilder output = new StringBuilder();
 
         //Scan file content
         Scanner readContent = new Scanner(fileToRead);
         while (readContent.hasNextLine()) {
             String line = readContent.nextLine();
+            output.append(line);
             System.out.println(line);
         }
         readContent.close();
+
+        //case of cat >
+        if(Objects.equals(commandTokens.get(1), ">")) {
+            //for >
+            String toSend = output.toString();
+            greaterThan(toSend,commandTokens.get(2));
+        }
+        //case of cat >>
+        else if(Objects.equals(commandTokens.get(1), ">>")) {
+            //for >
+            String toSend = output.toString();
+            greaterThanThan(toSend,commandTokens.get(2));
+        }
+
+
+
     }
 
     //Redirect output (>)
