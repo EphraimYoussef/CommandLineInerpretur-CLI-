@@ -365,10 +365,10 @@ public class CommandLineInterpreter {
             System.out.println("Enter text:");
             // Read input and then output
             String line = reader.nextLine();
-            System.out.println(line);  // Output to screen without saving
+            System.out.println(line);
 
         } else {
-            //Here either cat (filename) or cat > filename or cat >>filename
+            //Here cat > filename or cat >>filename
             String option = commandTokens.get(1);
             // Handle cat > file , cat >> file case
             if (Objects.equals(option, ">") || Objects.equals(option, ">>")) {
@@ -422,6 +422,7 @@ public class CommandLineInterpreter {
 
     //Redirect output (>)
     public void greaterThan(String output, String filename) throws IOException {
+        //toSend array is incase of touch if there isn't file so we pass array to create
         List<String> toSend = new ArrayList<String>();
         toSend.add(filename);
 
@@ -443,6 +444,7 @@ public class CommandLineInterpreter {
 
     //Redirect output (>>)
     public void greaterThanThan(String output, String filename) throws IOException {
+        //toSend array is incase of touch if there isn't file so we pass array to create
         List<String> toSend = new ArrayList<String>();
         toSend.add(filename);
 
@@ -455,7 +457,7 @@ public class CommandLineInterpreter {
         if (!file_checker.exists()) {
             touch(toSend);
         }
-        //path to file
+        //path to file  , true is for append
         FileWriter file = new FileWriter(path.toString(), true);
         file.write(output);
         file.close();
