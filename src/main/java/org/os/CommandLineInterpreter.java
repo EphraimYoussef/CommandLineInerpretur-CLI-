@@ -83,17 +83,17 @@ public class CommandLineInterpreter {
             }
         }
         //case of ls >
-        if (commandTokens.size() == 3 && Objects.equals(commandTokens.get(1), ">")) {
+        if(commandTokens.size() == 3 && Objects.equals(commandTokens.get(1), ">")) {
             //for >
             String toSend = list.toString();
-            greaterThan(toSend, commandTokens.get(2));
+            greaterThan(toSend,commandTokens.get(2));
             return;
         }
         //case of ls >>
-        else if (commandTokens.size() == 3 && Objects.equals(commandTokens.get(1), ">>")) {
+        else if(commandTokens.size() == 3 && Objects.equals(commandTokens.get(1), ">>")) {
             //for >
             String toSend = list.toString();
-            greaterThanThan(toSend, commandTokens.get(2));
+            greaterThanThan(toSend,commandTokens.get(2));
             return;
         }
         System.out.println(list);
@@ -104,7 +104,7 @@ public class CommandLineInterpreter {
         files = currentDirectory.listFiles();
         StringBuilder list = new StringBuilder();
         int count = 1;
-        if (files != null) {
+        if(files != null){
             for (int i = files.length - 1; i >= 0; i--) {
                 // this condition to avoid hiddenFiles
                 if (files[i].isHidden())
@@ -119,17 +119,17 @@ public class CommandLineInterpreter {
         }
 
         //case of ls >
-        if (commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">")) {
+        if(commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">")) {
             //for >
             String toSend = list.toString();
-            greaterThan(toSend, commandTokens.get(3));
+            greaterThan(toSend,commandTokens.get(3));
             return;
         }
         //case of ls >>
-        else if (commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">>")) {
+        else if(commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">>")) {
             //for >
             String toSend = list.toString();
-            greaterThanThan(toSend, commandTokens.get(3));
+            greaterThanThan(toSend,commandTokens.get(3));
             return;
         }
         System.out.println(list.toString());
@@ -150,17 +150,17 @@ public class CommandLineInterpreter {
             }
         }
         //case of ls >
-        if (commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">")) {
+        if(commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">")) {
             //for >
             String toSend = list.toString();
-            greaterThan(toSend, commandTokens.get(3));
+            greaterThan(toSend,commandTokens.get(3));
             return;
         }
         //case of ls >>
-        else if (commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">>")) {
+        else if(commandTokens.size() == 4 && Objects.equals(commandTokens.get(2), ">>")) {
             //for >
             String toSend = list.toString();
-            greaterThanThan(toSend, commandTokens.get(3));
+            greaterThanThan(toSend,commandTokens.get(3));
             return;
         }
         System.out.println(list.toString());
@@ -261,7 +261,7 @@ public class CommandLineInterpreter {
                 } else
                     System.out.println("Failed to Delete Directory (The files isn't Empty)");
             } else {
-                System.out.println("cd: No such directory: " + dir);
+                System.out.println("No such directory: " + dir);
             }
         }
 
@@ -307,17 +307,24 @@ public class CommandLineInterpreter {
             String path = currentDirectory.getAbsolutePath();
 
             String destinationPath = path + File.separator + commandTokens.getLast();
-            ;
             File destinationFile = new File(destinationPath);
 
+
             if (destinationFile.isDirectory()) {
+                for (int i = 1; i < commandTokens.size(); ++i) {
+                    String targetPath = path + File.separator + commandTokens.get(i);
+                    File targetFile = new File(targetPath);
+                    if (!targetFile.exists()) {
+                        System.out.println("mv: Target file does not exist: " + commandTokens.get(i));
+                        return;
+                    }
+                }
+
                 for (int i = 1; i < commandTokens.size() - 1; ++i) {
                     String sourcePath = path + File.separator + commandTokens.get(i);
                     File sourceFile = new File(sourcePath);
-                    if (sourceFile.exists()) {
-                        File newFileLocation = new File(destinationFile, sourceFile.getName());
-                        sourceFile.renameTo(newFileLocation);
-                    }
+                    File newFileLocation = new File(destinationFile, sourceFile.getName());
+                    sourceFile.renameTo(newFileLocation);
                 }
             } else {
                 System.out.println("Destination Directory does not exist.\n");

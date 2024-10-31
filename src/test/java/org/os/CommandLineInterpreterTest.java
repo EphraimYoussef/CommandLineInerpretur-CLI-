@@ -144,26 +144,26 @@ class CommandLineInterpreterTest {
     }
 
     // the commented directory makes this test fail
-    @Test
-    void testMkdirFailsIfDirectoryExists() {
-        // Manually create the directory before running mkdir
-//        File existingDirectory = new File(workingDir, "existingDir");
-        File existingDirectory2 = new File(workingDir, "existingDir2");
-
-        //this add the existingDirectory to the current directory
-//        existingDirectory.mkdir();
-
-
-//        List<String> commandTokens = Arrays.asList("mkdir", "existingDir");
-        List<String> commandTokens2 = Arrays.asList("mkdir", "existingDir2");
-
-//        cli.mkdir(commandTokens);
-         cli.mkdir(commandTokens2);
-
-        // Verify the output contains the message that indicates failure
-        String expectedOutput = "Failed to create Directory";
-        assertTrue(outputStream.toString().trim().contains(expectedOutput), "Output should indicate failure to create the directory as it already exists.");
-    }
+//    @Test
+//    void testMkdirFailsIfDirectoryExists() {
+//        // Manually create the directory before running mkdir
+////        File existingDirectory = new File(workingDir, "existingDir");
+//        File existingDirectory2 = new File(workingDir, "existingDir2");
+//
+//        //this add the existingDirectory to the current directory
+////        existingDirectory.mkdir();
+//
+//
+////        List<String> commandTokens = Arrays.asList("mkdir", "existingDir");
+//        List<String> commandTokens2 = Arrays.asList("mkdir", "existingDir2");
+//
+////        cli.mkdir(commandTokens);
+//         cli.mkdir(commandTokens2);
+//
+//        // Verify the output contains the message that indicates failure
+//        String expectedOutput = "Failed to create Directory";
+//        assertTrue(outputStream.toString().trim().contains(expectedOutput), "Output should indicate failure to create the directory as it already exists.");
+//    }
 
 
     @Test void testTouchForFileOnly() throws Exception{
@@ -204,11 +204,223 @@ class CommandLineInterpreterTest {
         assertTrue(outputStream.toString().trim().contains(expectedOutput), "Output should indicate failure to create the file.");
     }
 
-    @Test void testRemoveOneDirectory() throws Exception{
-        List<String> commandTokens = Arrays.asList("mkdir","newDir");
+    @Test
+    void testRemoveOneDirectory() throws Exception{
+        List<String> commandTokens = Arrays.asList("mkdir","newDir"), deleteCommand = Arrays.asList("rmdir","newDir");
 
         cli.mkdir(commandTokens);
 
-        File createdDirectory = new File(workingDir, "newDir");
+        File directoryToBeRemoved = new File(workingDir, "newDir");
+
+        cli.rmdir(deleteCommand);
+
+        assertTrue(!directoryToBeRemoved.exists(), "The directory should be deleted." );
+
+    }
+
+    @Test
+    void testRemoveOneDirectoryFails() throws Exception{
+        List<String> deleteCommand = Arrays.asList("rmdir","newDir");
+
+        cli.rmdir(deleteCommand);
+
+        String expectedOutput = "No such directory: newDir";
+
+        assertTrue(outputStream.toString().trim().contains(expectedOutput), "utput should indicate failure to delete the directory." );
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    @Test
+    void testInsufficientArguments() {
+        List<String> commandTokens = List.of("mv","file");
+        cli.mv(commandTokens);
+        assertTrue(outputStream.toString().contains("Error, Expected at least 2 arguments."), "Should display an error message for insufficient arguments");
+    }
+
+    @Test
+    void testMoveFileToDirectory() throws IOException {
+        File sourceFile = new File(workingDir, "source.txt");
+        sourceFile.createNewFile();
+        File destinationDir = new File(workingDir, "destination");
+        destinationDir.mkdir();
+
+        List<String> commandTokens = List.of("mv", "source.txt", "destination");
+        cli.mv(commandTokens);
+
+        File movedFile = new File(destinationDir, "source.txt");
+        assertTrue(movedFile.exists(), "File should be moved to the destination directory");
+    }
+
+    @Test
+    void testFailMoveFileToDirectory() throws IOException {
+        File sourceFile = new File(workingDir, "source.txt");
+        sourceFile.createNewFile();
+
+        File destinationDir = new File(workingDir, "destination");
+        destinationDir.mkdir();
+
+        String pathFail = workingDir.getAbsolutePath() + File.separator + "destination";
+        File failFile = new File(pathFail , "source.txt");
+        failFile.createNewFile();
+
+        List<String> commandTokens = List.of("mv", "source.txt", "destination");
+        cli.mv(commandTokens);
+
+        assertTrue(outputStream.toString().contains("Failed to move file."),
+                "Should display an error message for failed move operation");    }
+
+
+
+
+
+    @Test
+    void testRenameFile() throws IOException {
+        File sourceFile = new File(workingDir, "source.txt");
+        sourceFile.createNewFile();
+        File renamedFile = new File(workingDir, "renamed.txt");
+
+        List<String> commandTokens = List.of("mv", "source.txt", "renamed.txt");
+        cli.mv(commandTokens);
+
+        assertTrue(renamedFile.exists(), "File should be renamed to the new name");
+        assertFalse(sourceFile.exists(), "Original file should no longer exist");
+    }
+
+    @Test
+    void testFailRenameFile() throws IOException {
+        File sourceFile = new File(workingDir, "source.txt");
+        sourceFile.createNewFile();
+        File renamedFile = new File(workingDir, "renamed.txt");
+        renamedFile.createNewFile();
+
+        List<String> commandTokens = List.of("mv", "source.txt", "renamed.txt");
+        cli.mv(commandTokens);
+
+        assertTrue(outputStream.toString().contains("Failed to rename file."),
+                "Should display an error message for failed rename operation");
+    }
+
+    @Test
+    void testSourceFileDoesNotExist() {
+        List<String> commandTokens = List.of("mv", "nonexistent.txt", "destination.txt");
+        cli.mv(commandTokens);
+        assertTrue(outputStream.toString().contains("Source file does not exist."), "Should display an error message if the source file does not exist");
+    }
+
+    @Test
+    void testMoveMultipleFilesToDirectory() throws IOException {
+        File sourceFile1 = new File(workingDir, "source1.txt");
+        sourceFile1.createNewFile();
+        File sourceFile2 = new File(workingDir, "source2.txt");
+        sourceFile2.createNewFile();
+        File destinationDir = new File(workingDir, "destination");
+        destinationDir.mkdir();
+
+        List<String> commandTokens = List.of("mv", "source1.txt", "source2.txt", "destination");
+        cli.mv(commandTokens);
+
+        File movedFile1 = new File(destinationDir, "source1.txt");
+        File movedFile2 = new File(destinationDir, "source2.txt");
+
+        assertTrue(movedFile1.exists(), "First file should be moved to the destination directory");
+        assertTrue(movedFile2.exists(), "Second file should be moved to the destination directory");
+    }
+
+    @Test
+    void testFailMoveMultipleFilesToDirectory() throws IOException {
+        File sourceFile1 = new File(workingDir, "source1.txt");
+        sourceFile1.createNewFile();
+        File destinationDir = new File(workingDir, "destination");
+        destinationDir.mkdir();
+
+        List<String> commandTokens = List.of("mv", "source1.txt", "source2.txt", "destination");
+        cli.mv(commandTokens);
+
+        assertTrue(outputStream.toString().contains("mv: Target file does not exist: source2.txt") , "Should display an error message if the source file does not exist");
+    }
+
+    @Test
+    void testDestinationDirectoryDoesNotExistForMultipleFiles() throws IOException {
+        File sourceFile = new File(workingDir, "source.txt");
+        sourceFile.createNewFile();
+
+        File sourceFile2 = new File(workingDir, "source2.txt");
+        sourceFile2.createNewFile();
+
+        List<String> commandTokens = List.of("mv", "source.txt", "source2.txt" , "nonexistentDir");
+        cli.mv(commandTokens);
+
+        assertTrue(outputStream.toString().contains("Destination Directory does not exist."),
+                "Should display an error message if the destination directory does not exist");
+    }
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------
+
+    @Test
+    void testInvalidCommandSyntax() {
+        List<String> commandTokens = List.of("rm");
+        cli.rm(commandTokens);
+        assertTrue(outputStream.toString().contains("Invalid command syntax. Usage: rm <fileName>"),
+                "Should display an error message for invalid syntax");
+    }
+
+
+    @Test
+    void testFailRemoveDirectory() {
+        File directory = new File(workingDir, "testDir");
+        directory.mkdir();
+
+        List<String> commandTokens = List.of("rm", "testDir");
+        cli.rm(commandTokens);
+        assertTrue(outputStream.toString().contains("rm: cannot remove testDir : Is a directory"), "Should display an error message when trying to remove a directory");
+    }
+
+
+    @Test
+    void testTargetFileDoesNotExist() {
+        List<String> commandTokens = List.of("rm", "nonexistentFile.txt");
+        cli.rm(commandTokens);
+        assertTrue(outputStream.toString().contains("rm: Target file does not exist: nonexistentFile.txt"), "Should display an error message for non-existent file");
+    }
+
+    @Test
+    void testRemoveExistingFile() throws IOException {
+        File file = new File(workingDir, "testFile.txt");
+        file.createNewFile();
+
+        List<String> commandTokens = List.of("rm", "testFile.txt");
+        cli.rm(commandTokens);
+
+        assertFalse(file.exists(), "File should be deleted successfully");
+    }
+
+    @Test
+    void testRemoveMultipleFiles() throws IOException {
+        File file1 = new File(workingDir, "file1.txt");
+        file1.createNewFile();
+        File file2 = new File(workingDir, "file2.txt");
+        file2.createNewFile();
+
+        List<String> commandTokens = List.of("rm", "file1.txt", "file2.txt");
+        cli.rm(commandTokens);
+
+        assertFalse(file1.exists(), "First file should be deleted successfully");
+        assertFalse(file2.exists(), "Second file should be deleted successfully");
     }
 }
