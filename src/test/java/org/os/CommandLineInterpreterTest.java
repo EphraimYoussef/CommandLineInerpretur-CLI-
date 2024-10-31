@@ -143,27 +143,24 @@ class CommandLineInterpreterTest {
         assertTrue(createdDirectory.exists() && createdDirectory.isDirectory(), "The directory should be created successfully.");
     }
 
-    // the commented directory makes this test fail
-//    @Test
-//    void testMkdirFailsIfDirectoryExists() {
-//        // Manually create the directory before running mkdir
-////        File existingDirectory = new File(workingDir, "existingDir");
-//        File existingDirectory2 = new File(workingDir, "existingDir2");
-//
-//        //this add the existingDirectory to the current directory
-////        existingDirectory.mkdir();
-//
-//
-////        List<String> commandTokens = Arrays.asList("mkdir", "existingDir");
-//        List<String> commandTokens2 = Arrays.asList("mkdir", "existingDir2");
-//
-////        cli.mkdir(commandTokens);
-//         cli.mkdir(commandTokens2);
-//
-//        // Verify the output contains the message that indicates failure
-//        String expectedOutput = "Failed to create Directory";
-//        assertTrue(outputStream.toString().trim().contains(expectedOutput), "Output should indicate failure to create the directory as it already exists.");
-//    }
+//     the commented directory makes this test fail
+    @Test
+    void testMkdirFailsIfDirectoryExists() {
+        // Manually create the directory before running mkdir
+        File existingDirectory = new File(workingDir, "existingDir");
+
+        //this add the existingDirectory to the current directory
+        existingDirectory.mkdir();
+
+
+        List<String> commandTokens = Arrays.asList("mkdir", "existingDir");
+
+        cli.mkdir(commandTokens);
+
+        // Verify the output contains the message that indicates failure
+        String expectedOutput = "Failed to create Directory";
+        assertTrue(outputStream.toString().trim().contains(expectedOutput), "Output should indicate failure to create the directory as it already exists.");
+    }
 
 
     @Test void testTouchForFileOnly() throws Exception{
