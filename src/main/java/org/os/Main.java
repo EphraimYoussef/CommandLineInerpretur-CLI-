@@ -45,9 +45,9 @@ public class Main {
             } else if (command.equals("pwd")) {
                 cli.printWorkingDirectory();
             } else if (command.equals("ls")) {
-                if (Objects.equals(commandslist.get(1), "-a"))
+                if (commandslist.size()>1 && Objects.equals(commandslist.get(1), "-a"))
                     cli.printAllListFiles(commandslist);
-                else if (Objects.equals(commandslist.get(1), "-r"))
+                else if (commandslist.size()>1 && Objects.equals(commandslist.get(1), "-r"))
                     cli.printRevListFiles(commandslist);
                 else
                     cli.printListFiles(commandslist);
