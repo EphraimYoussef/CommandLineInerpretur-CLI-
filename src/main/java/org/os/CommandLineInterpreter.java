@@ -307,17 +307,24 @@ public class CommandLineInterpreter {
             String path = currentDirectory.getAbsolutePath();
 
             String destinationPath = path + File.separator + commandTokens.getLast();
-            ;
             File destinationFile = new File(destinationPath);
 
+
             if (destinationFile.isDirectory()) {
+                for (int i = 1; i < commandTokens.size(); ++i) {
+                    String targetPath = path + File.separator + commandTokens.get(i);
+                    File targetFile = new File(targetPath);
+                    if (!targetFile.exists()) {
+                        System.out.println("mv: Target file does not exist: " + commandTokens.get(i));
+                        return;
+                    }
+                }
+
                 for (int i = 1; i < commandTokens.size() - 1; ++i) {
                     String sourcePath = path + File.separator + commandTokens.get(i);
                     File sourceFile = new File(sourcePath);
-                    if (sourceFile.exists()) {
-                        File newFileLocation = new File(destinationFile, sourceFile.getName());
-                        sourceFile.renameTo(newFileLocation);
-                    }
+                    File newFileLocation = new File(destinationFile, sourceFile.getName());
+                    sourceFile.renameTo(newFileLocation);
                 }
             } else {
                 System.out.println("Destination Directory does not exist.\n");
@@ -346,7 +353,6 @@ public class CommandLineInterpreter {
         }
         for (int i = 1; i < commandTokens.size(); ++i) {
             String targetPath = path + File.separator + commandTokens.get(i);
-            ;
             File targetFile = new File(targetPath);
             targetFile.delete();
         }
@@ -405,9 +411,6 @@ public class CommandLineInterpreter {
             String toSend = output.toString();
             greaterThanThan(toSend,commandTokens.get(2));
         }
-
-
-
     }
 
     //Redirect output (>)
