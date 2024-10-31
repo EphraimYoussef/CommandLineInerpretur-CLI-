@@ -42,6 +42,25 @@ class CommandLineInterpreterTest {
         System.setOut(System.out);
     }
 
+    @Test
+    void testDisplayHelp() throws IOException {
+        cli.displayHelp();
+        String expectedOutput = "Available Commands:"+System.lineSeparator()+" - pwd, cd, ls, ls -a, ls -r, mkdir, rmdir, touch, mv, rm, cat"+System.lineSeparator()+
+                " - >, >>, | (supports limited redirection and piping)"+System.lineSeparator()+" - exit: To terminate the CLI"+System.lineSeparator()+
+                " - help: Displays this help message";
+
+        assertTrue(outputStream.toString().contains(expectedOutput));
+    }
+
+    @Test
+    void testErrorHandler(){
+        cli.errorHandler("unvalidCommand");
+
+        String expectedOutput = "Error executing command: unvalidCommand not valid";
+
+        assertTrue(outputStream.toString().contains(expectedOutput));
+    }
+
     //cd
     @Test
     void testChangeDirectory_NoArgument() {
