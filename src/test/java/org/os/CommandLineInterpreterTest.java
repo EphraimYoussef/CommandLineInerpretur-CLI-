@@ -204,11 +204,28 @@ class CommandLineInterpreterTest {
         assertTrue(outputStream.toString().trim().contains(expectedOutput), "Output should indicate failure to create the file.");
     }
 
-    @Test void testRemoveOneDirectory() throws Exception{
-        List<String> commandTokens = Arrays.asList("mkdir","newDir");
+    @Test
+    void testRemoveOneDirectory() throws Exception{
+        List<String> commandTokens = Arrays.asList("mkdir","newDir"), deleteCommand = Arrays.asList("rmdir","newDir");
 
         cli.mkdir(commandTokens);
 
-        File createdDirectory = new File(workingDir, "newDir");
+        File directoryToBeRemoved = new File(workingDir, "newDir");
+
+        cli.rmdir(deleteCommand);
+
+        assertTrue(!directoryToBeRemoved.exists(), "The directory should be deleted." );
+
+    }
+
+    @Test
+    void testRemoveOneDirectoryFails() throws Exception{
+        List<String> deleteCommand = Arrays.asList("rmdir","newDir");
+
+        cli.rmdir(deleteCommand);
+
+        String expectedOutput = "No such directory: newDir";
+
+        assertTrue(outputStream.toString().trim().contains(expectedOutput), "utput should indicate failure to delete the directory." );
     }
 }

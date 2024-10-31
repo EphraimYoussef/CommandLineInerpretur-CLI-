@@ -261,7 +261,7 @@ public class CommandLineInterpreter {
                 } else
                     System.out.println("Failed to Delete Directory (The files isn't Empty)");
             } else {
-                System.out.println("cd: No such directory: " + dir);
+                System.out.println("No such directory: " + dir);
             }
         }
 
