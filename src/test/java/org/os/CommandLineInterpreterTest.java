@@ -1,6 +1,7 @@
 package org.os;
 
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +30,16 @@ class CommandLineInterpreterTest {
         cli = new CommandLineInterpreter(workingDir);
         System.setOut(new PrintStream(outputStream));
 
+    }
+
+    @AfterEach
+    void tearDown() {
+        // Delete temporary directory and files after each test
+        for (File file : workingDir.listFiles()) {
+            file.delete();
+        }
+        workingDir.delete();
+        System.setOut(System.out);
     }
 
     //cd
@@ -455,9 +466,30 @@ class CommandLineInterpreterTest {
 //        assertEquals("Line 1", lines.get(1));
 //        assertEquals("Line 2", lines.get(2));
 //    }
-//
 
-    
+    @Test
+    void testGreaterThan() throws IOException {
+        List<String> commandTokens = Arrays.asList("ls", ">","newFile");
+        cli.printListFiles(commandTokens);
+
+        File newFile = new File(workingDir, "newFile");
+        newFile.createNewFile();
+
+        assertTrue(newFile.exists(), "New file should be created");
+
+    }
+    @Test
+    void testGreaterThanThan() throws IOException {
+        List<String> commandTokens = Arrays.asList("ls", ">>","newFile");
+        cli.printListFiles(commandTokens);
+
+        File newFile = new File(workingDir, "newFile");
+        newFile.createNewFile();
+
+        assertTrue(newFile.exists(), "New file should be created");
+
+    }
+
 }
 
 //---------------------------------------------------------------------------

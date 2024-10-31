@@ -30,7 +30,6 @@ public class CommandLineInterpreter {
     // Execute a system command using ProcessBuilder
     public void errorHandler(String command) {
         System.out.println("Error executing command: " + command + " not valid");
-
     }
 
     // Change directory (cd)
