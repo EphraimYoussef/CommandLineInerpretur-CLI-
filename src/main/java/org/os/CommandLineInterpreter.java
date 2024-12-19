@@ -39,7 +39,7 @@ public class CommandLineInterpreter {
             System.out.println("cd: missing argument");
             return;
         }
-        // join tokens from index 1 to the end, preserving spaces
+        // join tokens from index 1 to the end, and put if there is spaces
         String path = String.join(" ", commandTokens.subList(1, commandTokens.size()));
         File newDirectory;
 
